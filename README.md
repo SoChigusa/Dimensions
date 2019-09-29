@@ -8,6 +8,21 @@ The result can be outputted in a given unit.
 
 ## Summary of transformation laws
 
+### Mass units
+
+Basically we use
+
+$$
+6\times 10^{23} \,\mathrm{GeV} \simeq 1\,\mathrm{g}
+$$
+
+to transform into (eV) units. Followings are transformations frequently used.
+
+units | in gram | in eV
+--|---|--
+g | $1\,\mathrm{g}$ | $5.6\times 10^{23}\,\mathrm{GeV}$  
+t | $10^6\,\mathrm{g}$ | $5.6\times 10^{29}\,\mathrm{GeV}$
+
 ### Time units
 
 Basically we use

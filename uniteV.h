@@ -81,8 +81,9 @@ UnitEV::UnitEV(const std::map<std::string, UnitEV> &arg_tab,
 
   // unit transformation
   UnitEV res(arg_tab.at(v[1]));
-  res.pow(stod(v[2]));
-  res.prod(stod(v[0]));
+  double arg_p = stod(v[2]);
+  res.pow(arg_p);
+  res.prod(arg_p == 0. ? stod(v[0]) : std::pow(stod(v[0]), stod(v[2])));
   (*this) = res;
 }
 
