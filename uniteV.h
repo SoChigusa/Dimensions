@@ -28,13 +28,14 @@ public:
   double displayVal() const { return val; }
   double displayP() const { return p; }
   void prod(double);
+  void prod(const UnitEV &);
   void pow(double);
 };
 
 /**
  * Empty eV class
  */
-UnitEV::UnitEV() : val(0.), p(1.) {}
+UnitEV::UnitEV() : val(1.), p(0.) {}
 
 /**
  * Fundamental constructer with input values
@@ -86,10 +87,19 @@ UnitEV::UnitEV(const std::map<std::string, UnitEV> &arg_tab,
 }
 
 /**
- * Take a product of this object
+ * Take a product with dimensionless constant
  * @param arg_c coefficient
  */
 void UnitEV::prod(double arg_c) { val *= arg_c; }
+
+/**
+ * Take a product with another dimensionful object
+ * @param arg_uev object
+ */
+void UnitEV::prod(const UnitEV &arg_uev) {
+  val *= arg_uev.displayVal();
+  p += arg_uev.displayP();
+}
 
 /**
  * Take a power of this object
