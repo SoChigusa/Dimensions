@@ -73,4 +73,5 @@ unit | in meter | in eV
 --|---|--
 m | $1\,\mathrm{m}$ | $5.1\times 10^{15}\,\mathrm{GeV}^{-1}$
 A | $10^{-10}\,\mathrm{m}$ | $0.51\,\mathrm{keV}^{-1}$
+au | $1.5\times 10^{11}\,\mathrm{m}$ | $7.6\times 10^{26}\,\mathrm{GeV}^{-1}$
 pc | $3.1\times 10^{16}\,\mathrm{m}$ | $1.6\times 10^{32}\,\mathrm{GeV}^{-1}$
