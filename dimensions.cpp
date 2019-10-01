@@ -10,15 +10,17 @@
 
 // generate transformation table
 void generateTable(std::map<std::string, UnitEV> &arg_tab) {
-  std::vector<std::string> units{"eV", "g", "t", "s", "yr",
-                                 "Hz", "m", "A", "pc"};
+  std::vector<std::string> units{"const", "eV", "g", "t", "s",
+                                 "yr",    "Hz", "m", "A", "pc"};
   std::vector<double> vals{
+      1.,                                    // dimesnionless constant [const]
       1.,                                    // eV unit [eV]
       5.60959e+32, 5.60959e+38,              // mass unit [g,t]
       1.51927e+15, 4.79177e+22, 6.58212e-16, // time unit [s,yr,Hz]
       5.06773e+6,  5.06773e-4,  1.56374e+23  // length unit [m,A,pc]
   };
   std::vector<double> ps{
+      0.,           // dimensionless constant [const]
       1.,           // eV unit [ev]
       1.,  1.,      // mass unit [g,t]
       -1., -1., 1., // time unit [s,yr,Hz]
