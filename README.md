@@ -6,6 +6,25 @@ Perform a physics calculation with units.
 You can input several values with dimensions and take a product of them.
 The result can be outputted in a given unit.
 
+## How to use
+
+Prepare an input file named `input.dat` in the following format.
+
+```
+(value1)  (unit1)  (power1)
+(value2)  (unit2)  (power2)
+...
+```
+
+Each value should be divided by a tab.
+For each line, the input value means
+
+$$
+\left[ \mathrm{(value)} \mathrm{(unit)} \right]^{\mathrm{(power)}},
+$$
+
+and the result is a product of all lines.
+
 ## Summary of transformation laws
 
 ### Mass units
