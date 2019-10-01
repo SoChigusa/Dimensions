@@ -10,10 +10,20 @@
 
 // generate transformation table
 void generateTable(std::map<std::string, UnitEV> &arg_tab) {
-  std::vector<std::string> units{"eV", "g", "t", "s", "yr", "Hz", "m", "A"};
-  std::vector<double> vals{1.,          5.60959e+32, 5.60959e+38, 1.51927e+15,
-                           4.79177e+22, 6.58212e-16, 5.06773e+6,  5.06773e-4};
-  std::vector<double> ps{1., 1., 1., -1., -1., 1., -1., -1.};
+  std::vector<std::string> units{"eV", "g", "t", "s", "yr",
+                                 "Hz", "m", "A", "pc"};
+  std::vector<double> vals{
+      1.,                                    // eV unit [eV]
+      5.60959e+32, 5.60959e+38,              // mass unit [g,t]
+      1.51927e+15, 4.79177e+22, 6.58212e-16, // time unit [s,yr,Hz]
+      5.06773e+6,  5.06773e-4,  1.56374e+23  // length unit [m,A,pc]
+  };
+  std::vector<double> ps{
+      1.,           // eV unit [ev]
+      1.,  1.,      // mass unit [g,t]
+      -1., -1., 1., // time unit [s,yr,Hz]
+      -1., -1., -1  // length unit [m,A,pc]
+  };
   std::vector<std::string> pres{"T", "G",  "M", "k", "", "c",
                                 "m", "mu", "n", "p", "f"};
   std::vector<double> prevals{1.e+12, 1.e+9, 1.e+6, 1.e+3,  1.,    1.e-2,
@@ -47,13 +57,3 @@ int main() {
   std::cout << res.displayVal() << "\t" << res.displayP() << std::endl;
   return 0;
 }
-
-// 5.4e-34	g	1.
-// 4.95e0	g	-1.
-// 2.00507e-4	eV	0.
-// 1.e+9	GeV	-2.
-// 5.e-13	eV	0.
-// 7.e0	MeV	2.
-// 1.11111e-1	eV	0.
-// 1.e0	kg	1.
-// 1.e0	s	1.
