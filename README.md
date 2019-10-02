@@ -63,9 +63,9 @@ GHz | $10^9\,\mathrm{s}^{-1}$ | $0.66\,\mathrm{\mu eV}$
 
 Basically we use
 
-  ``` math
-  \hbar c \simeq 200\,\mathrm{MeV}\,\mathrm{fm}
-  ```
+``` math
+\hbar c \simeq 200\,\mathrm{MeV}\,\mathrm{fm}
+```
 to transform into (eV) units.
 Followings are transformations frequently used.
 
@@ -75,3 +75,15 @@ m | $1\,\mathrm{m}$ | $5.1\times 10^{15}\,\mathrm{GeV}^{-1}$
 A | $10^{-10}\,\mathrm{m}$ | $0.51\,\mathrm{keV}^{-1}$
 au | $1.5\times 10^{11}\,\mathrm{m}$ | $7.6\times 10^{26}\,\mathrm{GeV}^{-1}$
 pc | $3.1\times 10^{16}\,\mathrm{m}$ | $1.6\times 10^{32}\,\mathrm{GeV}^{-1}$
+
+### Temperature units
+
+Basically we use
+
+$$
+k_B \simeq 10^{-4}\,\mathrm{eV}\,\mathrm{K}^{-1}
+$$
+
+unit | in $\mathrm{K}$ | in eV
+--|---|--
+K | $1\,\mathrm{K}$ | $8.6\times 10^{-5}\,\mathrm{eV}$
