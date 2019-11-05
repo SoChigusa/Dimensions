@@ -8,7 +8,7 @@ The result can be outputted in a given unit.
 
 ## How to use
 
-Prepare an input file named `input.dat` in the following format.
+Prepare an input file `$(INPUTFILE)` in the following format.
 
 ```
 (value1)  (unit1)  (power1)
@@ -24,8 +24,22 @@ $$
 $$
 
 and the result is a product of all lines.
+You can execute the calculation through
+
+```
+./dimensions.out $(INPUTFILE)
+```
 
 ## Summary of transformation laws
+
+### constants
+
+You can use numerical constant without a dimension by using the unit `const`.
+Another constant unit is an angle unit `deg`.
+
+### Energy units
+
+You should use the unit `eV` for values with a unit of energy.
 
 ### Mass units
 
@@ -41,6 +55,8 @@ units | in gram | in eV
 --|---|--
 g | $1\,\mathrm{g}$ | $5.6\times 10^{23}\,\mathrm{GeV}$  
 t | $10^6\,\mathrm{g}$ | $5.6\times 10^{29}\,\mathrm{GeV}$
+
+g, t are equipped.
 
 ### Time units
 
@@ -59,6 +75,8 @@ s | $1\,\mathrm{s}$ | $1.5\times 10^{24}\,\mathrm{GeV}^{-1}$
 yr | $3.2\times 10^7 \mathrm{s}$ | $4.8\times 10^{31}\,\mathrm{GeV}^{-1}$
 GHz | $10^9\,\mathrm{s}^{-1}$ | $0.66\,\mathrm{\mu eV}$
 
+s, min, d, h, yr, Hz are equipped.
+
 ### Length units
 
 Basically we use
@@ -76,6 +94,8 @@ A | $10^{-10}\,\mathrm{m}$ | $0.51\,\mathrm{keV}^{-1}$
 au | $1.5\times 10^{11}\,\mathrm{m}$ | $7.6\times 10^{26}\,\mathrm{GeV}^{-1}$
 pc | $3.1\times 10^{16}\,\mathrm{m}$ | $1.6\times 10^{32}\,\mathrm{GeV}^{-1}$
 
+m, A, au, pc are equipped.
+
 ### Temperature units
 
 Basically we use
@@ -87,3 +107,5 @@ $$
 unit | in $\mathrm{K}$ | in eV
 --|---|--
 K | $1\,\mathrm{K}$ | $8.6\times 10^{-5}\,\mathrm{eV}$
+
+K is equipped.
