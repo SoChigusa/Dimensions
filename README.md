@@ -55,8 +55,11 @@ units | in gram | in eV
 --|---|--
 g | $1\,\mathrm{g}$ | $5.6\times 10^{23}\,\mathrm{GeV}$  
 t | $10^6\,\mathrm{g}$ | $5.6\times 10^{29}\,\mathrm{GeV}$
+Msolar | $2.0 \times 10^{33}\,\mathrm{g}$ | $1.1 \times 10^{57}\,\mathrm{GeV}$
 
 g, t are equipped.
+
+From astrophysics, Msolar is also equipped.
 
 ### Time units
 
@@ -109,3 +112,11 @@ unit | in $\mathrm{K}$ | in eV
 K | $1\,\mathrm{K}$ | $8.6\times 10^{-5}\,\mathrm{eV}$
 
 K is equipped.
+
+### gravity units
+
+Basically we use
+
+$$
+G = 6.7 \times 10^{-39} GeV^{-2}
+$$

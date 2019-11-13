@@ -10,29 +10,30 @@
 
 // generate transformation table
 void generateTable(std::map<std::string, UnitEV> &arg_tab) {
-  std::vector<std::string> units{"const", "deg", "eV", "g",  "t",  "s",
-                                 "min",   "h",   "d",  "yr", "Hz", "m",
-                                 "A",     "au",  "pc", "K"};
+  std::vector<std::string> units{"const", "deg", "eV", "g",  "t",  "Msolar",
+                                 "s",     "min", "h",  "d",  "yr", "Hz",
+                                 "m",     "A",   "au", "pc", "K",  "G"};
   std::vector<double> vals{
-      1.,                       // dimesnionless constant [const]
-      M_PI / 180.,              // angle unit [deg]
-      1.,                       // eV unit [eV]
-      5.60959e+32, 5.60959e+38, // mass unit [g,t]
+      1.,                                   // dimesnionless constant [const]
+      M_PI / 180.,                          // angle unit [deg]
+      1.,                                   // eV unit [eV]
+      5.60959e+32, 5.60959e+38, 1.1158e+57, // mass unit [g,t,Msolar]
       1.51927e+15, 9.11562e+16, 5.46937e+18,
       1.31265e+20, 4.79117e+22, 6.58212e-16, // time unit [s,min,h,d,yr,Hz]
       5.06773e+6,  5.06773e-4,  7.58122e+17,
       1.56374e+23, // length unit [m,A,au,pc]
-      8.61733e-5   // temperature unit [K]
+      8.61733e-5,  // temperature unit [K]
+      6.70883e-57, // gravitational unit [G]
   };
-  std::vector<double> ps{
-      0.,                          // dimensionless constant [const]
-      0.,                          // angle unit [deg]
-      1.,                          // eV unit [ev]
-      1.,  1.,                     // mass unit [g,t]
-      -1., -1., -1., -1., -1., 1., // time unit [s,min,h,d,yr,Hz]
-      -1., -1., -1., -1.,          // length unit [m,A,au,pc]
-      1.                           // temperature unit [K]
-  };
+  std::vector<double> ps{0.,           // dimensionless constant [const]
+                         0.,           // angle unit [deg]
+                         1.,           // eV unit [ev]
+                         1.,  1.,  1., // mass unit [g,t, Msolar]
+                         -1., -1., -1., -1.,
+                         -1., 1.,            // time unit [s,min,h,d,yr,Hz]
+                         -1., -1., -1., -1., // length unit [m,A,au,pc]
+                         1.,                 // temperature unit [K]
+                         -2.};               // gravitational unit [G]
   std::vector<std::string> pres{"T", "G",  "M", "k", "", "c",
                                 "m", "mu", "n", "p", "f"};
   std::vector<double> prevals{1.e+12, 1.e+9, 1.e+6, 1.e+3,  1.,    1.e-2,
