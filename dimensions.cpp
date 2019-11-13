@@ -17,7 +17,7 @@ void generateTable(std::map<std::string, UnitEV> &arg_tab) {
       1.,                                   // dimesnionless constant [const]
       M_PI / 180.,                          // angle unit [deg]
       1.,                                   // eV unit [eV]
-      5.60959e+32, 5.60959e+38, 1.1158e+57, // mass unit [g,t,Msolar]
+      5.60959e+32, 5.60959e+38, 1.1158e+66, // mass unit [g,t,Msolar]
       1.51927e+15, 9.11562e+16, 5.46937e+18,
       1.31265e+20, 4.79117e+22, 6.58212e-16, // time unit [s,min,h,d,yr,Hz]
       5.06773e+6,  5.06773e-4,  7.58122e+17,
