@@ -12,8 +12,8 @@ The result can be outputted in a given unit.
 Prepare an input file `$(INPUTFILE)` in the following format.
 
 ```
-(value1)  (unit1)  (power1)
-(value2)  (unit2)  (power2)
+(label1) (value1)  (unit1)  (power1)
+(label2) (value2)  (unit2)  (power2)
 ...
 ```
 
@@ -21,7 +21,13 @@ Each value should be divided by a tab.
 For each line, the input value means
 
 $$
-\left[ \mathrm{(value)} \mathrm{(unit)} \right]^{\mathrm{(power)}},
+\left[ \text{(label)} \right]^{\text{(power)}},
+$$
+
+with
+
+$$
+\text{(label)} = \text{(value)} \text{(unit)}
 $$
 
 and the result is a product of all lines.

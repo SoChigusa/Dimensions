@@ -71,19 +71,19 @@ UnitEV::UnitEV(const std::map<std::string, UnitEV> &arg_tab,
   }
 
   // error processing
-  if (v.size() != 3) {
+  if (v.size() != 4) {
     std::cout << "Invalid format of input data" << std::endl;
     return;
-  } else if (arg_tab.count(v[1]) == 0) {
+  } else if (arg_tab.count(v[2]) == 0) {
     std::cout << "Invalid unit in input data" << std::endl;
     return;
   }
 
   // unit transformation
-  UnitEV res(arg_tab.at(v[1]));
-  double arg_p = stod(v[2]);
+  UnitEV res(arg_tab.at(v[2]));
+  double arg_p = stod(v[3]);
   res.pow(arg_p);
-  res.prod(std::pow(stod(v[0]), stod(v[2])));
+  res.prod(std::pow(stod(v[1]), stod(v[3])));
   (*this) = res;
 }
 

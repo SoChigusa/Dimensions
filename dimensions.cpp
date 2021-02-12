@@ -71,6 +71,9 @@ int main(int argc, char *argv[]) {
     if (buf != "") {
       UnitEV val(table, buf);
       res.prod(val);
+      if (res.displayVal() == 0) { // Format error (or simply zero)
+        break;
+      }
     }
   }
   std::cout << res.displayVal() << "\t" << res.displayP() << std::endl;
