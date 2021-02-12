@@ -1,3 +1,4 @@
+
 # Dimensions
 
 ## Description
@@ -35,7 +36,11 @@ You can execute the calculation through
 ### constants
 
 You can use numerical constant without a dimension by using the unit `const`.
-Another constant unit is an angle unit `deg`.
+Other constant units are the `pi` and the angle unit `deg`.
+
+### Physics constants
+
+- Electromagnetic coupling constant `e`.
 
 ### Energy units
 
@@ -51,11 +56,11 @@ $$
 
 to transform into (eV) units. Followings are transformations frequently used.
 
-units | in gram | in eV
---|---|--
-g | $1\,\mathrm{g}$ | $5.6\times 10^{23}\,\mathrm{GeV}$  
-t | $10^6\,\mathrm{g}$ | $5.6\times 10^{29}\,\mathrm{GeV}$
-Msolar | $2.0 \times 10^{33}\,\mathrm{g}$ | $1.1 \times 10^{57}\,\mathrm{GeV}$
+| units | in gram | in eV |
+|---|---|---|
+| g | $1\,\mathrm{g}$ | $5.6\times 10^{23}\,\mathrm{GeV}$  |
+| t | $10^6\,\mathrm{g}$ | $5.6\times 10^{29}\,\mathrm{GeV}$ |
+| Msolar | $2.0 \times 10^{33}\,\mathrm{g}$ | $1.1 \times 10^{57}\,\mathrm{GeV}$ |
 
 g, t are equipped.
 
@@ -72,11 +77,11 @@ Basically we use
 to transform into (eV) units.
 Followings are transformations frequently used.
 
-unit  |  in second  | in eV
---|--|--
-s | $1\,\mathrm{s}$ | $1.5\times 10^{24}\,\mathrm{GeV}^{-1}$
-yr | $3.2\times 10^7 \mathrm{s}$ | $4.8\times 10^{31}\,\mathrm{GeV}^{-1}$
-GHz | $10^9\,\mathrm{s}^{-1}$ | $0.66\,\mathrm{\mu eV}$
+| unit  |  in second  | in eV |
+|--|--|--|
+| s | $1\,\mathrm{s}$ | $1.5\times 10^{24}\,\mathrm{GeV}^{-1}$ |
+| yr | $3.2\times 10^7 \mathrm{s}$ | $4.8\times 10^{31}\,\mathrm{GeV}^{-1}$ |
+| GHz | $10^9\,\mathrm{s}^{-1}$ | $0.66\,\mathrm{\mu eV}$ |
 
 s, min, d, h, yr, Hz are equipped.
 
@@ -90,12 +95,12 @@ Basically we use
 to transform into (eV) units.
 Followings are transformations frequently used.
 
-unit | in meter | in eV
---|---|--
-m | $1\,\mathrm{m}$ | $5.1\times 10^{15}\,\mathrm{GeV}^{-1}$
-A | $10^{-10}\,\mathrm{m}$ | $0.51\,\mathrm{keV}^{-1}$
-au | $1.5\times 10^{11}\,\mathrm{m}$ | $7.6\times 10^{26}\,\mathrm{GeV}^{-1}$
-pc | $3.1\times 10^{16}\,\mathrm{m}$ | $1.6\times 10^{32}\,\mathrm{GeV}^{-1}$
+| unit | in meter | in eV |
+|--|---|--|
+| m | $1\,\mathrm{m}$ | $5.1\times 10^{15}\,\mathrm{GeV}^{-1}$ |
+| A | $10^{-10}\,\mathrm{m}$ | $0.51\,\mathrm{keV}^{-1}$ |
+| au | $1.5\times 10^{11}\,\mathrm{m}$ | $7.6\times 10^{26}\,\mathrm{GeV}^{-1}$ |
+| pc | $3.1\times 10^{16}\,\mathrm{m}$ | $1.6\times 10^{32}\,\mathrm{GeV}^{-1}$ |
 
 m, A, au, pc are equipped.
 
@@ -107,9 +112,9 @@ $$
 k_B \simeq 10^{-4}\,\mathrm{eV}\,\mathrm{K}^{-1}
 $$
 
-unit | in $\mathrm{K}$ | in eV
---|---|--
-K | $1\,\mathrm{K}$ | $8.6\times 10^{-5}\,\mathrm{eV}$
+| unit | in $\mathrm{K}$ | in eV |
+|--|---|--|
+| K | $1\,\mathrm{K}$ | $8.6\times 10^{-5}\,\mathrm{eV}$ |
 
 K is equipped.
 
