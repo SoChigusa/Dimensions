@@ -83,7 +83,7 @@ Followings are transformations frequently used.
 | yr | $3.2\times 10^7 \mathrm{s}$ | $4.8\times 10^{31}\,\mathrm{GeV}^{-1}$ |
 | GHz | $10^9\,\mathrm{s}^{-1}$ | $0.66\,\mathrm{\mu eV}$ |
 
-s, min, d, h, yr, Hz are equipped.
+s, min, h, d, yr, Hz are equipped.
 
 ### Length units
 
@@ -118,10 +118,16 @@ $$
 
 K is equipped.
 
-### gravity units
+### Gravity units
 
 Basically we use
 
 $$
 G = 6.7 \times 10^{-39} GeV^{-2}
 $$
+
+G is equipped.
+
+### Magnetic units
+
+T, Wb, emu are equipped.
