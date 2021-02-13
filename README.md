@@ -12,6 +12,7 @@ The result can be outputted in a given unit.
 Prepare an input file `$(INPUTFILE)` in the following format.
 
 ```
+[unit]   1         (unit0)  (power0)
 (label1) (value1)  (unit1)  (power1)
 (label2) (value2)  (unit2)  (power2)
 ...
@@ -31,6 +32,8 @@ $$
 $$
 
 and the result is a product of all lines.
+The first line represents the unit in which you want to obtain your result.
+Note that `(power0)` should be *minus* the power of your result so that the final number is dimensionless.
 You can execute the calculation through
 
 ```
