@@ -37,7 +37,7 @@ Note that `(power0)` should be *minus* the power of your result so that the fina
 You can execute the calculation through
 
 ```
-./dimensions.out $(INPUTFILE)
+./dimensions.out [-o $(LATEXOUTPUT)] $(INPUTFILE)
 ```
 
 ## Summary of transformation laws

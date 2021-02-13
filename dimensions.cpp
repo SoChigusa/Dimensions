@@ -7,6 +7,7 @@
 
 #include "uniteV.h"
 #include <fstream>
+#include <unistd.h>
 
 // generate transformation table
 void generateTable(std::map<std::string, UnitEV> &arg_tab) {
@@ -51,16 +52,30 @@ void generateTable(std::map<std::string, UnitEV> &arg_tab) {
 }
 
 int main(int argc, char *argv[]) {
-  if (argc != 2) {
-    std::cout << "Usage: ./dimensions.out (input file name)" << std::endl;
-    return -1;
+
+  // option analysis
+  int opt;
+  std::string ofname;
+  opterr = 0;
+  while ((opt = getopt(argc, argv, "o:")) != -1) {
+    switch (opt) {
+    case 'o':
+      ofname += optarg;
+      break;
+    default:
+      std::cout << "Usage: ./dimensions.out [-o latex output file] (input file)"
+                << std::endl;
+      return -1;
+    }
   }
 
+  // prepare conversion table
   std::map<std::string, UnitEV> table;
   generateTable(table);
 
+  // calculation
   std::string buf;
-  std::ifstream ifs(argv[1]);
+  std::ifstream ifs(argv[optind]);
   UnitEV res;
   while (getline(ifs, buf)) {
     if (buf != "") {
@@ -73,19 +88,22 @@ int main(int argc, char *argv[]) {
   }
   std::cout << res.displayVal() << "\t" << res.displayP() << std::endl;
 
-  std::vector<std::string> expr;
-  res.displayExpr(expr);
-  std::cout << "\\documentclass[12pt,notitlepage]{article}\n"
-               "\\usepackage[dvipdfmx]{graphicx}\n"
-               "\\usepackage{amsmath}\n"
-               "\\begin{document}\n"
-               "\\begin{align*}\n";
-  std::cout << std::scientific << std::setprecision(0) << "  "
-            << res.displayVal();
-  for (auto it = expr.begin(); it != expr.end(); ++it) {
-    std::cout << "  " << *it << std::endl;
+  // latex output
+  if (ofname != "") {
+    std::ofstream ofs(ofname);
+    std::vector<std::string> expr;
+    res.displayExpr(expr);
+    ofs << "\\documentclass[12pt,notitlepage]{article}\n"
+           "\\usepackage[dvipdfmx]{graphicx}\n"
+           "\\usepackage{amsmath}\n"
+           "\\begin{document}\n"
+           "\\begin{align*}\n";
+    ofs << std::setprecision(0) << "  " << res.displayVal();
+    for (auto it = expr.begin(); it != expr.end(); ++it) {
+      ofs << "  " << *it << std::endl;
+    }
+    ofs << "\\end{align*}\n"
+           "\\end{document}\n";
   }
-  std::cout << "\\end{align*}\n"
-               "\\end{document}\n";
   return 0;
 }
