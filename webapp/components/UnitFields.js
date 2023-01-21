@@ -2,12 +2,18 @@ import { TextField, Typography, IconButton, Stack, Box } from '@mui/material';
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 
-const UnitFields = ({ name, defaultValue = { unit: 'const', power: '1' }, isFirstUnit = false }) => {
+const UnitFields = ({
+  isFirstUnit = false,
+  id,
+  defaultValue = { unit: 'const', power: '1' },
+  removeUnit,
+  addUnit,
+} = {}) => {
   return (
     <Stack spacing={1} direction='row' sx={{ alignItems: 'center' }}>
       <TextField
         required
-        id={`unit-${name}`}
+        key={`unit-${id}`}
         label="unit"
         defaultValue={defaultValue.unit}
       />
@@ -16,15 +22,15 @@ const UnitFields = ({ name, defaultValue = { unit: 'const', power: '1' }, isFirs
       </Typography>
       <TextField
         required
-        id={`unit-${name}-power`}
+        key={`unit-power-${id}`}
         label="unit power"
         defaultValue={defaultValue.power}
       />
       <Box sx={{ display: 'inline' }}>
-        <IconButton aria-label='delete' disabled={isFirstUnit}>
+        <IconButton aria-label='delete' disabled={isFirstUnit} onClick={removeUnit}>
           <RemoveCircleOutlineIcon />
         </IconButton>
-        <IconButton aria-label='add'>
+        <IconButton aria-label='add' onClick={addUnit}>
           <AddCircleOutlineIcon />
         </IconButton>
       </Box>

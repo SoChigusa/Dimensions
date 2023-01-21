@@ -3,50 +3,80 @@ import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import ParameterFields from "./ParameterFields";
 import UnitControl from "./UnitControl";
+import { useState } from "react";
+import genKey from "@/utils/genKey";
 
-const giveParameterFields = (elem, index) => (
-  <Stack spacing={1} direction="row" sx={{ alignItems: 'center' }}>
-    <Stack spacing={1} direction="column">
-      <Stack spacing={1} direction="row" sx={{ alignItems: 'center' }}>
-        <ParameterFields
-          name={`input-${index}`}
-          defaultValue={{ name: elem.name, power: elem.power }}
-          defaultChecked={elem.display}
-        />
-        <Box sx={{ display: 'inline' }}>
-          <IconButton aria-label='delete' disabled={index == 0}>
-            <RemoveCircleOutlineIcon />
-          </IconButton>
-          <IconButton aria-label='add'>
-            <AddCircleOutlineIcon />
-          </IconButton>
-        </Box>
-      </Stack>
-      {elem.units.length > 0 ? (
-        <Stack spacing={1} direction="row" sx={{ alignItems: 'center' }}>
-          <Typography variant='body1' ml={6}>
-            =
-          </Typography>
-          <TextField
-            required
-            id={`input-${index}-parameter-value`}
-            label="value"
-            defaultValue={elem.value}
-          />
-          <UnitControl
-            name={`input-${index}`}
-            defaultValue={elem.units}
-          />
+const defaultParameter = [{
+  display: true,
+  name: '',
+  power: '1',
+  value: '1',
+  units: [{ unit: 'const', power: '1' }]
+}];
+
+const ParameterControl = ({ defaultValue = defaultParameter }) => {
+  const [parameters, setParameters] = useState(defaultValue);
+  const [keys, setKeys] = useState(genKey({ size: defaultValue.length }));
+  const giveParameterFields = (elem, index) => {
+    const removeParameter = () => {
+      setParameters(parameters.filter((e, i) => (i !== index)));
+      setKeys(keys.filter((e, i) => (i !== index)));
+    };
+    const addParameter = () => {
+      setParameters([
+        ...parameters.slice(0, index + 1),
+        defaultParameter[0],
+        ...parameters.slice(index + 1)
+      ]);
+      setKeys([...keys.slice(0, index + 1),
+      genKey({ asList: false }),
+      ...keys.slice(index + 1)
+      ]);
+    }
+
+    return (
+      <Stack key={keys[index]} spacing={1} direction="row" sx={{ alignItems: 'center' }}>
+        <Stack spacing={1} direction="column">
+          <Stack spacing={1} direction="row" sx={{ alignItems: 'center' }}>
+            <ParameterFields
+              key={keys[index]}
+              id={keys[index]}
+              defaultValue={{ name: elem.name, power: elem.power }}
+              defaultChecked={elem.display}
+            />
+            <Box sx={{ display: 'inline' }}>
+              <IconButton aria-label='delete' disabled={index == 0} onClick={removeParameter}>
+                <RemoveCircleOutlineIcon />
+              </IconButton>
+              <IconButton aria-label='add' onClick={addParameter}>
+                <AddCircleOutlineIcon />
+              </IconButton>
+            </Box>
+          </Stack>
+          {elem.units.length > 0 ? (
+            <Stack spacing={1} direction="row" sx={{ alignItems: 'center' }}>
+              <Typography variant='body1' ml={6}>
+                =
+              </Typography>
+              <TextField
+                required
+                key={`parameter-value-${keys[index]}`}
+                label="value"
+                defaultValue={elem.value}
+              />
+              <UnitControl
+                defaultValue={elem.units}
+              />
+            </Stack>
+          ) : (<></>)}
         </Stack>
-      ) : (<></>)}
-    </Stack>
-  </Stack>
-);
+      </Stack>
+    )
+  };
 
-const ParameterControl = ({ defaultValue = [{ display: true, name: '', power: '1', value: '1', units: [{ unit: 'const', power: '1' }] }] }) => {
   return (
     <Stack spacing={1} direction="column">
-      {defaultValue.map(giveParameterFields)}
+      {parameters.map(giveParameterFields)}
     </Stack>
   )
 };

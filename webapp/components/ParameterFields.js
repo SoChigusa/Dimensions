@@ -1,15 +1,20 @@
 import { Checkbox, TextField, Typography } from '@mui/material';
 
-const ParameterFields = ({ name, defaultValue = { name: '', power: '1' }, isOutput = false, defaultChecked = true }) => {
+const ParameterFields = ({
+  id,
+  defaultValue = { name: '', power: '1' },
+  isOutput = false,
+  defaultChecked = true
+}) => {
   return (
     <>
       <Checkbox
-        aria-label={`${name}-check-box`}
+        key={`check-box-${id}`}
         disabled={isOutput}
         defaultChecked={defaultChecked}
       />
       <TextField
-        id={`${name}-parameter`}
+        key={`parameter-${id}`}
         label={isOutput ? "result name" : "parameter"}
         defaultValue={defaultValue.name}
       />
@@ -20,7 +25,7 @@ const ParameterFields = ({ name, defaultValue = { name: '', power: '1' }, isOutp
           </Typography>
           <TextField
             required
-            id={`${name}-power`}
+            key={`parameter-power-${id}`}
             label="power"
             defaultValue={defaultValue.power}
           />

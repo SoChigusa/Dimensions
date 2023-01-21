@@ -1,4 +1,4 @@
-import Head from 'next/head'
+import Head from 'next/head';
 import Latex from 'react-latex-next'
 import { AppBar, Button, Container, Paper, Stack, Toolbar, Typography } from '@mui/material'
 import ParameterFields from '@/components/ParameterFields';
@@ -14,7 +14,6 @@ export default function Home() {
         <meta name="description" content="Web application of Dimensions" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.css" integrity="sha384-vKruj+a13U8yHIkAyGgK1J3ArTLzrFGBbBc0tDp4ad/EyewESeXE/Iv67Aj8gKZ0" crossorigin="anonymous"></link>
       </Head>
       <main>
         <AppBar position="static" sx={{ mb: 2 }}>
