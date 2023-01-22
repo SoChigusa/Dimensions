@@ -5,7 +5,7 @@ import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 const UnitFields = ({
   isFirstUnit = false,
   id,
-  defaultValue = { unit: 'const', power: '1' },
+  defaultValue = { name: 'const', power: '1' },
   removeUnit,
   addUnit,
 } = {}) => {
@@ -14,8 +14,9 @@ const UnitFields = ({
       <TextField
         required
         key={`unit-${id}`}
+        color="secondary"
         label="unit"
-        defaultValue={defaultValue.unit}
+        defaultValue={defaultValue.name}
       />
       <Typography variant='body1'>
         ^
@@ -23,14 +24,15 @@ const UnitFields = ({
       <TextField
         required
         key={`unit-power-${id}`}
+        color="secondary"
         label="unit power"
         defaultValue={defaultValue.power}
       />
       <Box sx={{ display: 'inline' }}>
-        <IconButton aria-label='delete' disabled={isFirstUnit} onClick={removeUnit}>
+        <IconButton aria-label='delete' disabled={isFirstUnit} color="secondary" onClick={removeUnit}>
           <RemoveCircleOutlineIcon />
         </IconButton>
-        <IconButton aria-label='add' onClick={addUnit}>
+        <IconButton aria-label='add' color="secondary" onClick={addUnit}>
           <AddCircleOutlineIcon />
         </IconButton>
       </Box>

@@ -11,7 +11,7 @@ const defaultParameter = [{
   name: '',
   power: '1',
   value: '1',
-  units: [{ unit: 'const', power: '1' }]
+  units: [{ name: 'const', power: '1' }]
 }];
 
 const ParameterControl = ({ defaultValue = defaultParameter }) => {
@@ -41,14 +41,15 @@ const ParameterControl = ({ defaultValue = defaultParameter }) => {
             <ParameterFields
               key={keys[index]}
               id={keys[index]}
-              defaultValue={{ name: elem.name, power: elem.power }}
               defaultChecked={elem.display}
+              defaultValue={{ name: elem.name, power: elem.power }}
+              isConst={elem.units.length == 0}
             />
             <Box sx={{ display: 'inline' }}>
-              <IconButton aria-label='delete' disabled={index == 0} onClick={removeParameter}>
+              <IconButton aria-label='delete' disabled={index == 0} color="primary" onClick={removeParameter}>
                 <RemoveCircleOutlineIcon />
               </IconButton>
-              <IconButton aria-label='add' onClick={addParameter}>
+              <IconButton aria-label='add' color="primary" onClick={addParameter}>
                 <AddCircleOutlineIcon />
               </IconButton>
             </Box>

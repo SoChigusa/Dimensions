@@ -3,8 +3,9 @@ import { Checkbox, TextField, Typography } from '@mui/material';
 const ParameterFields = ({
   id,
   defaultValue = { name: '', power: '1' },
+  defaultChecked = true,
   isOutput = false,
-  defaultChecked = true
+  isConst = false,
 }) => {
   return (
     <>
@@ -15,7 +16,7 @@ const ParameterFields = ({
       />
       <TextField
         key={`parameter-${id}`}
-        label={isOutput ? "result name" : "parameter"}
+        label={isOutput ? "result name" : (isConst ? "constant" : "parameter")}
         defaultValue={defaultValue.name}
       />
       {isOutput ? (<></>) : (

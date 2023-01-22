@@ -3,7 +3,7 @@ import genKey from "@/utils/genKey";
 import { Typography, Stack } from "@mui/material"
 import UnitFields from "./UnitFields"
 
-const UnitControl = ({ defaultValue = [{ unit: 'const', power: '1' }] }) => {
+const UnitControl = ({ defaultValue = [{ name: 'const', power: '1' }] }) => {
   const [units, setUnits] = useState(defaultValue);
   const [keys, setKeys] = useState(genKey({ size: defaultValue.length }));
   const giveUnitFields = (elem, index) => {
@@ -13,7 +13,7 @@ const UnitControl = ({ defaultValue = [{ unit: 'const', power: '1' }] }) => {
     };
     const addUnit = () => {
       setUnits([...units.slice(0, index + 1),
-      { unit: 'const', power: '1' },
+      { name: 'const', power: '1' },
       ...units.slice(index + 1)
       ]);
       setKeys([...keys.slice(0, index + 1),

@@ -1,0 +1,58 @@
+[
+  {
+    "name": "E",
+    "value": 1e18
+  },
+  {
+    "name": "P",
+    "value": 1e15
+  },
+  {
+    "name": "T",
+    "value": 1e12
+  },
+  {
+    "name": "G",
+    "value": 1e9
+  },
+  {
+    "name": "M",
+    "value": 1e6
+  },
+  {
+    "name": "k",
+    "value": 1e3
+  },
+  {
+    "name": "",
+    "value": 1
+  },
+  {
+    "name": "c",
+    "value": 1e-2
+  },
+  {
+    "name": "m",
+    "value": 1e-3
+  },
+  {
+    "name": "mu",
+    "value": 1e-6
+  },
+  {
+    "name": "n",
+    "value": 1e-9
+  },
+  {
+    "name": "p",
+    "value": 1e-12
+  },
+  {
+    "name": "f",
+    "value": 1e-15
+  },
+  {
+    "name": "a",
+    "value": 1e-18
+  }
+]

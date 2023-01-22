@@ -1,0 +1,117 @@
+[
+  {
+    "name": "const",
+    "value": 1,
+    "dimension": 0
+  },
+  {
+    "name": "pi",
+    "value": 3.14159,
+    "dimension": 0
+  },
+  {
+    "name": "e",
+    "value": 3.02822e-01,
+    "dimension": 0
+  },
+  {
+    "name": "deg",
+    "value": 1.74533e-02,
+    "dimension": 0
+  },
+  {
+    "name": "eV",
+    "value": 1,
+    "dimension": 1
+  },
+  {
+    "name": "g",
+    "value": 5.60959e+32,
+    "dimension": 1
+  },
+  {
+    "name": "t",
+    "value": 5.60959e+38,
+    "dimension": 1
+  },
+  {
+    "name": "Msolar",
+    "value": 1.1158e+66,
+    "dimension": 1
+  },
+  {
+    "name": "s",
+    "value": 1.51927e+15,
+    "dimension": -1
+  },
+  {
+    "name": "min",
+    "value": 9.11562e+16,
+    "dimension": -1
+  },
+  {
+    "name": "h",
+    "value": 5.46937e+18,
+    "dimension": -1
+  },
+  {
+    "name": "d",
+    "value": 1.31265e+20,
+    "dimension": -1
+  },
+  {
+    "name": "yr",
+    "value": 4.79117e+22,
+    "dimension": -1
+  },
+  {
+    "name": "Hz",
+    "value": 6.58212e-16,
+    "dimension": 1
+  },
+  {
+    "name": "m",
+    "value": 5.06773e+6,
+    "dimension": -1
+  },
+  {
+    "name": "A",
+    "value": 5.06773e-4,
+    "dimension": -1
+  },
+  {
+    "name": "au",
+    "value": 7.58122e+17,
+    "dimension": -1
+  },
+  {
+    "name": "pc",
+    "value": 1.56374e+23,
+    "dimension": -1
+  },
+  {
+    "name": "K",
+    "value": 8.61733e-5,
+    "dimension": 1
+  },
+  {
+    "name": "G",
+    "value": 6.70883e-57,
+    "dimension": -2
+  },
+  {
+    "name": "T",
+    "value": 1.95353e+2,
+    "dimension": 2
+  },
+  {
+    "name": "Wb",
+    "value": 5.01703e+15,
+    "dimension": 0
+  },
+  {
+    "name": "emu",
+    "value": 3.19499e+13,
+    "dimension": -1
+  }
+]
