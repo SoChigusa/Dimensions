@@ -1,5 +1,5 @@
-const genKey = ({ asList = true, size = 1 } = {}) => {
-  if (!asList) {
+const genKey = ({ size = 1 } = {}) => {
+  if (size == 1) {
     return Math.random().toString(32).substring(2);
   } else {
     let res = [];

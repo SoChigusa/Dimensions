@@ -8,25 +8,30 @@ const UnitFields = ({
   defaultValue = { name: 'const', power: '1' },
   removeUnit,
   addUnit,
+  onChange,
 } = {}) => {
   return (
     <Stack spacing={1} direction='row' sx={{ alignItems: 'center' }}>
       <TextField
         required
+        id={`unit-${id}`}
         key={`unit-${id}`}
         color="secondary"
         label="unit"
         defaultValue={defaultValue.name}
+        onChange={onChange}
       />
       <Typography variant='body1'>
         ^
       </Typography>
       <TextField
         required
+        id={`unit-power-${id}`}
         key={`unit-power-${id}`}
         color="secondary"
         label="unit power"
         defaultValue={defaultValue.power}
+        onChange={onChange}
       />
       <Box sx={{ display: 'inline' }}>
         <IconButton aria-label='delete' disabled={isFirstUnit} color="secondary" onClick={removeUnit}>

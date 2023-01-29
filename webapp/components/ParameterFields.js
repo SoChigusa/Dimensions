@@ -6,6 +6,7 @@ const ParameterFields = ({
   defaultChecked = true,
   isOutput = false,
   isConst = false,
+  onChange,
 }) => {
   return (
     <>
@@ -15,9 +16,11 @@ const ParameterFields = ({
         defaultChecked={defaultChecked}
       />
       <TextField
+        id={`parameter-${id}`}
         key={`parameter-${id}`}
         label={isOutput ? "result name" : (isConst ? "constant" : "parameter")}
         defaultValue={defaultValue.name}
+        onChange={onChange}
       />
       {isOutput ? (<></>) : (
         <>
@@ -26,9 +29,11 @@ const ParameterFields = ({
           </Typography>
           <TextField
             required
+            id={`parameter-power-${id}`}
             key={`parameter-power-${id}`}
             label="power"
             defaultValue={defaultValue.power}
+            onChange={onChange}
           />
         </>
       )

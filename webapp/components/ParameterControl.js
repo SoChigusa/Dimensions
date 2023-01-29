@@ -1,49 +1,95 @@
+import genKey from "@/utils/genKey";
 import { Box, IconButton, Stack, TextField, Typography } from "@mui/material";
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import ParameterFields from "./ParameterFields";
 import UnitControl from "./UnitControl";
-import { useState } from "react";
-import genKey from "@/utils/genKey";
 
-const defaultParameter = [{
-  display: true,
-  name: '',
-  power: '1',
-  value: '1',
-  units: [{ name: 'const', power: '1' }]
-}];
+// minimal input parameters used as default
+const genDefaultParameter = () => {
+  return {
+    key: genKey(),
+    display: true,
+    name: '',
+    power: '1',
+    value: '1',
+    units: [{ key: genKey(), name: 'const', power: '1' }]
+  }
+};
 
-const ParameterControl = ({ defaultValue = defaultParameter }) => {
-  const [parameters, setParameters] = useState(defaultValue);
-  const [keys, setKeys] = useState(genKey({ size: defaultValue.length }));
+const OutputParameterControl = ({ parameters, setParameters, onChange }) => {
+  const removeUnit = i => {
+    let newParameter = parameters[0];
+    newParameter.units.splice(i, 1);
+    setParameters([newParameter]);
+  };
+  const addUnit = (u, i) => {
+    let newParameter = parameters[0];
+    newParameter.units.splice(i + 1, 0, u);
+    setParameters([newParameter]);
+  };
+
+  return (
+    <Stack spacing={1} direction="row" sx={{ alignItems: 'center' }}>
+      <ParameterFields
+        key={parameters[0].key}
+        id={parameters[0].key}
+        isOutput
+        defaultValue={{ name: parameters[0].name }}
+        onChange={onChange}
+      />
+      <UnitControl
+        defaultValue={parameters[0].units}
+        removeUnit={removeUnit}
+        addUnit={addUnit}
+        onChange={onChange}
+      />
+    </Stack>
+  )
+};
+
+const InputParameterControl = ({ parameters, setParameters, onChange }) => {
   const giveParameterFields = (elem, index) => {
     const removeParameter = () => {
       setParameters(parameters.filter((e, i) => (i !== index)));
-      setKeys(keys.filter((e, i) => (i !== index)));
     };
     const addParameter = () => {
       setParameters([
         ...parameters.slice(0, index + 1),
-        defaultParameter[0],
+        genDefaultParameter(),
         ...parameters.slice(index + 1)
       ]);
-      setKeys([...keys.slice(0, index + 1),
-      genKey({ asList: false }),
-      ...keys.slice(index + 1)
+    };
+    const removeUnit = i => {
+      let newParameter = parameters[index];
+      newParameter.units.splice(i, 1);
+      setParameters([
+        ...parameters.slice(0, index),
+        newParameter,
+        ...parameters.slice(index + 1)
       ]);
-    }
+    };
+    const addUnit = (u, i) => {
+      let newParameter = parameters[index];
+      newParameter.units.splice(i + 1, 0, u);
+      setParameters([
+        ...parameters.slice(0, index),
+        newParameter,
+        ...parameters.slice(index + 1)
+      ]);
+    };
 
     return (
-      <Stack key={keys[index]} spacing={1} direction="row" sx={{ alignItems: 'center' }}>
+      <Stack key={parameters[index].key} spacing={1} direction="row" sx={{ alignItems: 'center' }}>
         <Stack spacing={1} direction="column">
           <Stack spacing={1} direction="row" sx={{ alignItems: 'center' }}>
             <ParameterFields
-              key={keys[index]}
-              id={keys[index]}
+              key={parameters[index].key}
+              id={parameters[index].key}
               defaultChecked={elem.display}
               defaultValue={{ name: elem.name, power: elem.power }}
               isConst={elem.units.length == 0}
+              onChange={onChange}
             />
             <Box sx={{ display: 'inline' }}>
               <IconButton aria-label='delete' disabled={index == 0} color="primary" onClick={removeParameter}>
@@ -61,12 +107,17 @@ const ParameterControl = ({ defaultValue = defaultParameter }) => {
               </Typography>
               <TextField
                 required
-                key={`parameter-value-${keys[index]}`}
+                id={`parameter-value-${parameters[index].key}`}
+                key={`parameter-value-${parameters[index].key}`}
                 label="value"
                 defaultValue={elem.value}
+                onChange={onChange}
               />
               <UnitControl
                 defaultValue={elem.units}
+                removeUnit={removeUnit}
+                addUnit={addUnit}
+                onChange={onChange}
               />
             </Stack>
           ) : (<></>)}
@@ -80,6 +131,14 @@ const ParameterControl = ({ defaultValue = defaultParameter }) => {
       {parameters.map(giveParameterFields)}
     </Stack>
   )
+};
+
+const ParameterControl = ({ parameters, setParameters, onChange, isOutput = false }) => {
+  if (isOutput) {
+    return OutputParameterControl({ parameters, setParameters, onChange });
+  } else {
+    return InputParameterControl({ parameters, setParameters, onChange });
+  }
 };
 
 export default ParameterControl;

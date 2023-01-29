@@ -1,4 +1,5 @@
 import calculate from '@/utils/calculate';
+import genKey from "@/utils/genKey";
 import importUnitsData from '@/utils/importUnitsData';
 import Head from 'next/head';
 import Latex from 'react-latex-next'
@@ -10,11 +11,74 @@ import { useState } from 'react';
 
 export function getStaticProps() {
   const { units, prefixes, all_units } = importUnitsData();
-  return { props: { units, prefixes, all_units }, };
+
+  const defaultOutput = [
+    { key: genKey(), display: true, name: 'B', power: '1', value: '1', units: [{ key: genKey(), name: 'T', power: '1' }] }
+  ];
+  const defaultParameters = [
+    { key: genKey(), display: false, name: '2', power: '1/2', value: '2', units: [] },
+    { key: genKey(), display: false, name: 'e', power: '-1', value: '1', units: [] },
+    { key: genKey(), display: false, name: 'v_a', power: 1, value: '1e-3', units: [{ key: genKey(), name: 'const', power: '1' }] },
+    { key: genKey(), display: true, name: 'g_{aee}', power: '1', value: '1e-10', units: [{ key: genKey(), name: 'const', power: '1' }] },
+    { key: genKey(), display: true, name: '\\rho_a', power: '1/2', value: '0.3', units: [{ key: genKey(), name: 'GeV', power: '1' }, { key: genKey(), name: 'cm', power: '-3' }] },
+  ];
+
+  return { props: { units, prefixes, all_units, defaultOutput, defaultParameters, }, };
 }
 
-export default function Home({ units, prefixes, all_units }) {
+export default function Home({ units, prefixes, all_units, defaultOutput, defaultParameters, }) {
+
+  // states for alert information
   const [alerts, setAlerts] = useState([]);
+
+  // states for output information
+  const [output, setOutput] = useState(defaultOutput);
+  const handleOnChangeOutput = event => {
+    const { name, value } = event.currentTarget;
+    const id = event.currentTarget.id;
+    setOutput({ ...output, [id]: value });
+  };
+
+  // states for input parameter information
+  const [parameters, setParameters] = useState(defaultParameters);
+  const handleOnChange = event => {
+    const { name, value } = event.currentTarget;
+    const id = event.currentTarget.id;
+    const dist = id.split('-')[0];
+    const key = id.split('-').pop();
+    let index, subIndex;
+    if (dist === 'parameter') {
+      index = parameters.findIndex(elem => elem.key === key);
+    } else if (dist === 'unit') {
+      index = parameters.findIndex(elem => {
+        subIndex = elem.units.findIndex(unit => unit.key === key);
+        return subIndex != -1;
+      });
+    }
+    const newParameter = parameters[index];
+    switch (id) {
+      case 'parameter-' + key:
+        newParameter.name = value;
+        break;
+      case 'parameter-power-' + key:
+        newParameter.power = value;
+        break;
+      case 'parameter-value-' + key:
+        newParameter.value = value;
+        break;
+      case 'unit-' + key:
+        newParameter.units[subIndex].name = value;
+        break;
+      case 'unit-power-' + key:
+        newParameter.units[subIndex].power = value;
+        break;
+    }
+    setParameters([
+      ...parameters.slice(0, index),
+      newParameter,
+      ...parameters.slice(index + 1)
+    ]);
+  }
 
   const latex_src = "\$\$B_a \\sim 4\\times 10^{-18}\\,\\mathrm{T}\\,\\left(\\frac{g_{aee}}{10^{-10}}\\right)\\left(\\frac{\\rho_a}{0.3\\,\\mathrm{GeV}/\\mathrm{cm}^3}\\right)^{1/2}\$\$";
   return (
@@ -64,27 +128,22 @@ export default function Home({ units, prefixes, all_units }) {
             入力データ
           </Typography>
           <Stack spacing={1} direction="column">
-            <Stack spacing={1} direction="row" sx={{ alignItems: 'center' }}>
-              <ParameterFields id='output' defaultValue={{ name: 'B_a' }} isOutput />
-              <UnitControl
-                name="output"
-                defaultValue={[{ name: 'T', power: '1' }]}
-              />
-            </Stack>
             <ParameterControl
-              defaultValue={[
-                { display: false, name: '2', power: '1/2', value: '2', units: [] },
-                { display: false, name: 'e', power: '-1', value: '1', units: [] },
-                { display: false, name: 'v_a', power: 1, value: '1e-3', units: [{ name: 'const', power: '1' }] },
-                { display: true, name: 'g_{aee}', power: '1', value: '1e-10', units: [{ name: 'const', power: '1' }] },
-                { display: true, name: '\\rho_a', power: '1/2', value: '0.3', units: [{ name: 'GeV', power: '1' }, { name: 'cm', power: '-3' }] },
-              ]}
+              isOutput
+              parameters={output}
+              setParameters={setOutput}
+              onChange={handleOnChangeOutput}
+            />
+            <ParameterControl
+              parameters={parameters}
+              setParameters={setParameters}
+              onChange={handleOnChange}
             />
             <Stack spacing={1} direction="row">
               <Button variant='outlined'>リセット</Button>
               <Button
                 variant='outlined'
-                onClick={() => calculate({ units, prefixes, all_units, alerts, setAlerts })}
+                onClick={() => calculate({ units, prefixes, all_units, output, parameters, alerts, setAlerts })}
               >計算する</Button>
             </Stack>
           </Stack>
