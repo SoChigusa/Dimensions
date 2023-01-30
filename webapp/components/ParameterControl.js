@@ -17,14 +17,14 @@ const genDefaultParameter = () => {
   }
 };
 
-const OutputParameterControl = ({ parameters, setParameters, onChange }) => {
+const OutputParameterControl = ({ output, setParameters, onChange }) => {
   const removeUnit = i => {
-    let newParameter = parameters[0];
+    let newParameter = output;
     newParameter.units.splice(i, 1);
     setParameters([newParameter]);
   };
   const addUnit = (u, i) => {
-    let newParameter = parameters[0];
+    let newParameter = output;
     newParameter.units.splice(i + 1, 0, u);
     setParameters([newParameter]);
   };
@@ -32,14 +32,14 @@ const OutputParameterControl = ({ parameters, setParameters, onChange }) => {
   return (
     <Stack spacing={1} direction="row" sx={{ alignItems: 'center' }}>
       <ParameterFields
-        key={parameters[0].key}
-        id={parameters[0].key}
+        key={output.key}
+        id={output.key}
         isOutput
-        defaultValue={{ name: parameters[0].name }}
+        defaultValue={{ name: output.name }}
         onChange={onChange}
       />
       <UnitControl
-        defaultValue={parameters[0].units}
+        defaultValue={output.units}
         removeUnit={removeUnit}
         addUnit={addUnit}
         onChange={onChange}
@@ -133,12 +133,15 @@ const InputParameterControl = ({ parameters, setParameters, onChange }) => {
   )
 };
 
-const ParameterControl = ({ parameters, setParameters, onChange, isOutput = false }) => {
-  if (isOutput) {
-    return OutputParameterControl({ parameters, setParameters, onChange });
-  } else {
-    return InputParameterControl({ parameters, setParameters, onChange });
-  }
+const ParameterControl = ({ parameters, setParameters, onChange }) => {
+  const output = parameters[0];
+  const input = parameters.slice(1);
+  return (
+    <>
+      {OutputParameterControl({ output, setParameters, onChange })}
+      {InputParameterControl({ parameters: input, setParameters, onChange })}
+    </>
+  );
 };
 
 export default ParameterControl;

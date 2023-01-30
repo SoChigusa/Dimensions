@@ -4,18 +4,17 @@ import importUnitsData from '@/utils/importUnitsData';
 import Head from 'next/head';
 import Latex from 'react-latex-next'
 import { Alert, AppBar, Button, Container, Paper, Stack, Toolbar, Typography } from '@mui/material'
-import ParameterFields from '@/components/ParameterFields';
-import UnitControl from '@/components/UnitControl';
 import ParameterControl from '@/components/ParameterControl';
 import { useState } from 'react';
 
 export function getStaticProps() {
   const { units, prefixes, all_units } = importUnitsData();
 
-  const defaultOutput = [
-    { key: genKey(), display: true, name: 'B', power: '1', value: '1', units: [{ key: genKey(), name: 'T', power: '1' }] }
-  ];
+  const defaultLatex = "\$\$B_a \\sim 4\\times 10^{-18}\\,\\mathrm{T}\\,\\left(\\frac{g_{aee}}{10^{-10}}\\right)\\left(\\frac{\\rho_a}{0.3\\,\\mathrm{GeV}/\\mathrm{cm}^3}\\right)^{1/2}\$\$";
+  "$$B \\sim \\left(\\frac{g_{aee}}{1e-10\\,\\mathrm{const}^1}\\right)^{1}\\left(\\frac{\\rho_a}{0.3\\,\\mathrm{GeV}^1}\\mathrm{cm}^-3}\\right)^{1/2}$$"
   const defaultParameters = [
+    // first parameter treated as output name & unit
+    { key: genKey(), display: true, name: 'B', power: '1', value: '1', units: [{ key: genKey(), name: 'T', power: '1' }] },
     { key: genKey(), display: false, name: '2', power: '1/2', value: '2', units: [] },
     { key: genKey(), display: false, name: 'e', power: '-1', value: '1', units: [] },
     { key: genKey(), display: false, name: 'v_a', power: 1, value: '1e-3', units: [{ key: genKey(), name: 'const', power: '1' }] },
@@ -23,21 +22,16 @@ export function getStaticProps() {
     { key: genKey(), display: true, name: '\\rho_a', power: '1/2', value: '0.3', units: [{ key: genKey(), name: 'GeV', power: '1' }, { key: genKey(), name: 'cm', power: '-3' }] },
   ];
 
-  return { props: { units, prefixes, all_units, defaultOutput, defaultParameters, }, };
+  return { props: { units, prefixes, all_units, defaultLatex, defaultParameters, }, };
 }
 
-export default function Home({ units, prefixes, all_units, defaultOutput, defaultParameters, }) {
+export default function Home({ units, prefixes, all_units, defaultLatex, defaultParameters, }) {
 
   // states for alert information
   const [alerts, setAlerts] = useState([]);
 
-  // states for output information
-  const [output, setOutput] = useState(defaultOutput);
-  const handleOnChangeOutput = event => {
-    const { name, value } = event.currentTarget;
-    const id = event.currentTarget.id;
-    setOutput({ ...output, [id]: value });
-  };
+  // states for output latex src
+  const [latex, setLatex] = useState(defaultLatex);
 
   // states for input parameter information
   const [parameters, setParameters] = useState(defaultParameters);
@@ -80,7 +74,6 @@ export default function Home({ units, prefixes, all_units, defaultOutput, defaul
     ]);
   }
 
-  const latex_src = "\$\$B_a \\sim 4\\times 10^{-18}\\,\\mathrm{T}\\,\\left(\\frac{g_{aee}}{10^{-10}}\\right)\\left(\\frac{\\rho_a}{0.3\\,\\mathrm{GeV}/\\mathrm{cm}^3}\\right)^{1/2}\$\$";
   return (
     <>
       <Head>
@@ -120,7 +113,7 @@ export default function Home({ units, prefixes, all_units, defaultOutput, defaul
               出力結果
             </Typography>
             <Paper variant='outlined'>
-              <Latex>{latex_src}</Latex>
+              <Latex>{latex}</Latex>
             </Paper>
             <Button variant='outlined'>LaTeX ソースをコピー</Button>
           </Stack>
@@ -128,12 +121,6 @@ export default function Home({ units, prefixes, all_units, defaultOutput, defaul
             入力データ
           </Typography>
           <Stack spacing={1} direction="column">
-            <ParameterControl
-              isOutput
-              parameters={output}
-              setParameters={setOutput}
-              onChange={handleOnChangeOutput}
-            />
             <ParameterControl
               parameters={parameters}
               setParameters={setParameters}
@@ -143,7 +130,7 @@ export default function Home({ units, prefixes, all_units, defaultOutput, defaul
               <Button variant='outlined'>リセット</Button>
               <Button
                 variant='outlined'
-                onClick={() => calculate({ units, prefixes, all_units, output, parameters, alerts, setAlerts })}
+                onClick={() => calculate({ units, prefixes, all_units, parameters, setLatex, alerts, setAlerts })}
               >計算する</Button>
             </Stack>
           </Stack>

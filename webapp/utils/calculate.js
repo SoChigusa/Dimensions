@@ -1,3 +1,5 @@
+import genLatexSrc from "./genLatexSrc";
+
 const uniteV = ({ units, prefixes, all_units, input, alerts, setAlerts }) => {
   let value = 1.;
   let dimension = 0;
@@ -20,23 +22,23 @@ const uniteV = ({ units, prefixes, all_units, input, alerts, setAlerts }) => {
   return { value, dimension, new_alerts };
 }
 
-const calculate = ({ units, prefixes, all_units, output, parameters, alerts, setAlerts, }) => {
-  const elements = output.concat(parameters);
+const calculate = ({ units, prefixes, all_units, output, parameters, setLatex, alerts, setAlerts, }) => {
   let value = 1.;
   let dimension = 0;
-  elements.map((element, index) => {
-    const ineV = uniteV({ units, prefixes, all_units, input: element.units, alerts, setAlerts });
-    const power = index == 0 ? -eval(element.power) : eval(element.power);
-    value *= (eval(element.value) * ineV.value) ** power;
+  parameters.map((parameter, index) => {
+    const ineV = uniteV({ units, prefixes, all_units, input: parameter.units, alerts, setAlerts });
+    const power = index == 0 ? -eval(parameter.power) : eval(parameter.power);
+    value *= (eval(parameter.value) * ineV.value) ** power;
     dimension += ineV.dimension * power;
   });
+
   if (dimension != 0) {
     setAlerts([...alerts,
       'Output mass dimension does not match the sum of input dimensions!'
     ]);
+  } else {
+    setLatex(genLatexSrc({ parameters, value }));
   }
-  console.log(value, dimension)
-  return { value, dimension };
 }
 
 export default calculate;
