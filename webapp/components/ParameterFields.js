@@ -3,9 +3,10 @@ import { Checkbox, TextField, Typography } from '@mui/material';
 const ParameterFields = ({
   id,
   defaultValue = { name: '', power: '1' },
-  defaultChecked = true,
+  checked = true,
   isOutput = false,
   isConst = false,
+  onCheck,
   onChange,
 }) => {
   return (
@@ -13,7 +14,8 @@ const ParameterFields = ({
       <Checkbox
         key={`check-box-${id}`}
         disabled={isOutput}
-        defaultChecked={defaultChecked}
+        checked={checked}
+        onChange={onCheck}
       />
       <TextField
         id={`parameter-${id}`}

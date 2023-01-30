@@ -3,20 +3,8 @@ import genKey from "@/utils/genKey";
 import { Typography, Stack } from "@mui/material"
 import UnitFields from "./UnitFields"
 
-const UnitControl = ({ defaultValue, removeUnit, addUnit, onChange }) => {
-  const [units, setUnits] = useState(defaultValue);
+const UnitControl = ({ units, removeUnit, addUnit, onChange }) => {
   const giveUnitFields = (elem, index) => {
-    // const removeUnit = () => {
-    //   setUnits(units.filter((e, i) => (i !== index)));
-    // };
-    // const addUnit = () => {
-    //   setUnits([...units.slice(0, index + 1),
-    //   { key: genKey(), name: 'const', power: '1' },
-    //   ...units.slice(index + 1)
-    //   ]);
-    //   console.log(units);
-    // };
-
     return (
       <UnitFields
         isFirstUnit={index == 0}

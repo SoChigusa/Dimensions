@@ -17,16 +17,22 @@ const genDefaultParameter = () => {
   }
 };
 
-const OutputParameterControl = ({ output, setParameters, onChange }) => {
+const OutputParameterControl = ({ output, input, setParameters, onChange }) => {
   const removeUnit = i => {
     let newParameter = output;
     newParameter.units.splice(i, 1);
-    setParameters([newParameter]);
+    setParameters([
+      newParameter,
+      ...input,
+    ]);
   };
   const addUnit = (u, i) => {
     let newParameter = output;
     newParameter.units.splice(i + 1, 0, u);
-    setParameters([newParameter]);
+    setParameters([
+      newParameter,
+      ...input,
+    ]);
   };
 
   return (
@@ -39,7 +45,7 @@ const OutputParameterControl = ({ output, setParameters, onChange }) => {
         onChange={onChange}
       />
       <UnitControl
-        defaultValue={output.units}
+        units={output.units}
         removeUnit={removeUnit}
         addUnit={addUnit}
         onChange={onChange}
@@ -48,47 +54,65 @@ const OutputParameterControl = ({ output, setParameters, onChange }) => {
   )
 };
 
-const InputParameterControl = ({ parameters, setParameters, onChange }) => {
+const InputParameterControl = ({ output, input, setParameters, onChange }) => {
+  // note a difference between indices of parameters and input (= parameters - output)
   const giveParameterFields = (elem, index) => {
+    const toggleDisplay = () => {
+      let newParameter = input[index];
+      newParameter.display = !newParameter.display;
+      setParameters([
+        output,
+        ...input.slice(0, index),
+        newParameter,
+        ...input.slice(index + 1)
+      ]);
+    }
     const removeParameter = () => {
-      setParameters(parameters.filter((e, i) => (i !== index)));
+      setParameters([
+        output,
+        ...input.filter((e, i) => (i !== index))
+      ]);
     };
     const addParameter = () => {
       setParameters([
-        ...parameters.slice(0, index + 1),
+        output,
+        ...input.slice(0, index + 1),
         genDefaultParameter(),
-        ...parameters.slice(index + 1)
+        ...input.slice(index + 1)
       ]);
     };
     const removeUnit = i => {
-      let newParameter = parameters[index];
+      let newParameter = input[index];
       newParameter.units.splice(i, 1);
       setParameters([
-        ...parameters.slice(0, index),
+        output,
+        ...input.slice(0, index),
         newParameter,
-        ...parameters.slice(index + 1)
+        ...input.slice(index + 1)
       ]);
     };
     const addUnit = (u, i) => {
-      let newParameter = parameters[index];
+      let newParameter = input[index];
       newParameter.units.splice(i + 1, 0, u);
       setParameters([
-        ...parameters.slice(0, index),
+        output,
+        ...input.slice(0, index),
         newParameter,
-        ...parameters.slice(index + 1)
+        ...input.slice(index + 1)
       ]);
     };
 
     return (
-      <Stack key={parameters[index].key} spacing={1} direction="row" sx={{ alignItems: 'center' }}>
+      <Stack key={input[index].key} spacing={1} direction="row" sx={{ alignItems: 'center' }}>
         <Stack spacing={1} direction="column">
           <Stack spacing={1} direction="row" sx={{ alignItems: 'center' }}>
             <ParameterFields
-              key={parameters[index].key}
-              id={parameters[index].key}
-              defaultChecked={elem.display}
+              key={input[index].key}
+              id={input[index].key}
+              checked={elem.display}
               defaultValue={{ name: elem.name, power: elem.power }}
               isConst={elem.units.length == 0}
+              onCheck={toggleDisplay}
               onChange={onChange}
             />
             <Box sx={{ display: 'inline' }}>
@@ -107,14 +131,14 @@ const InputParameterControl = ({ parameters, setParameters, onChange }) => {
               </Typography>
               <TextField
                 required
-                id={`parameter-value-${parameters[index].key}`}
-                key={`parameter-value-${parameters[index].key}`}
+                id={`parameter-value-${input[index].key}`}
+                key={`parameter-value-${input[index].key}`}
                 label="value"
                 defaultValue={elem.value}
                 onChange={onChange}
               />
               <UnitControl
-                defaultValue={elem.units}
+                units={elem.units}
                 removeUnit={removeUnit}
                 addUnit={addUnit}
                 onChange={onChange}
@@ -128,7 +152,7 @@ const InputParameterControl = ({ parameters, setParameters, onChange }) => {
 
   return (
     <Stack spacing={1} direction="column">
-      {parameters.map(giveParameterFields)}
+      {input.map(giveParameterFields)}
     </Stack>
   )
 };
@@ -138,8 +162,8 @@ const ParameterControl = ({ parameters, setParameters, onChange }) => {
   const input = parameters.slice(1);
   return (
     <>
-      {OutputParameterControl({ output, setParameters, onChange })}
-      {InputParameterControl({ parameters: input, setParameters, onChange })}
+      {OutputParameterControl({ output, input, setParameters, onChange })}
+      {InputParameterControl({ output, input, setParameters, onChange })}
     </>
   );
 };

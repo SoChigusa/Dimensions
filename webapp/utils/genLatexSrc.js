@@ -4,7 +4,7 @@ const val2exp = value => {
   let str;
   if (vf == 1) {
     if (exp == 0) str = '1 ';
-    if (exp == 1) str = '10 ';
+    else if (exp == 1) str = '10 ';
     else str = `10^{${exp}} `;
   } else {
     str = `${vf} `;

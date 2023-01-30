@@ -6,13 +6,19 @@ import Latex from 'react-latex-next'
 import { Alert, AppBar, Button, Container, Paper, Stack, Toolbar, Typography } from '@mui/material'
 import ParameterControl from '@/components/ParameterControl';
 import { useState } from 'react';
+import genLatexSrc from '@/utils/genLatexSrc';
 
 export function getStaticProps() {
   const { units, prefixes, all_units } = importUnitsData();
 
-  const defaultLatex = "\$\$B_a \\sim 4\\times 10^{-18}\\,\\mathrm{T}\\,\\left(\\frac{g_{aee}}{10^{-10}}\\right)\\left(\\frac{\\rho_a}{0.3\\,\\mathrm{GeV}/\\mathrm{cm}^3}\\right)^{1/2}\$\$";
-  "$$B \\sim \\left(\\frac{g_{aee}}{1e-10\\,\\mathrm{const}^1}\\right)^{1}\\left(\\frac{\\rho_a}{0.3\\,\\mathrm{GeV}^1}\\mathrm{cm}^-3}\\right)^{1/2}$$"
+  // default parameters when reset
   const defaultParameters = [
+    { key: genKey(), display: true, name: 'R', power: '1', value: '1', units: [{ key: genKey(), name: 'const', power: '1' }] },
+    { key: genKey(), display: false, name: '', power: '1', value: '1', units: [{ key: genKey(), name: 'const', power: '1' }] },
+  ];
+
+  // first example
+  const exampleParameters = [
     // first parameter treated as output name & unit
     { key: genKey(), display: true, name: 'B', power: '1', value: '1', units: [{ key: genKey(), name: 'T', power: '1' }] },
     { key: genKey(), display: false, name: '2', power: '1/2', value: '2', units: [] },
@@ -22,19 +28,19 @@ export function getStaticProps() {
     { key: genKey(), display: true, name: '\\rho_a', power: '1/2', value: '0.3', units: [{ key: genKey(), name: 'GeV', power: '1' }, { key: genKey(), name: 'cm', power: '-3' }] },
   ];
 
-  return { props: { units, prefixes, all_units, defaultLatex, defaultParameters, }, };
+  return { props: { units, prefixes, all_units, defaultParameters, exampleParameters, }, };
 }
 
-export default function Home({ units, prefixes, all_units, defaultLatex, defaultParameters, }) {
+export default function Home({ units, prefixes, all_units, defaultParameters, exampleParameters, }) {
 
   // states for alert information
   const [alerts, setAlerts] = useState([]);
 
   // states for output latex src
-  const [latex, setLatex] = useState(defaultLatex);
+  const [latex, setLatex] = useState(genLatexSrc({ parameters: exampleParameters, value: 4e-18 }));
 
   // states for input parameter information
-  const [parameters, setParameters] = useState(defaultParameters);
+  const [parameters, setParameters] = useState(exampleParameters);
   const handleOnChange = event => {
     const { name, value } = event.currentTarget;
     const id = event.currentTarget.id;
@@ -73,6 +79,12 @@ export default function Home({ units, prefixes, all_units, defaultLatex, default
       ...parameters.slice(index + 1)
     ]);
   }
+
+  // reset function
+  const reset = () => {
+    setParameters(defaultParameters);
+    setLatex(genLatexSrc({ parameters: defaultParameters, value: 1 }))
+  };
 
   return (
     <>
@@ -127,7 +139,10 @@ export default function Home({ units, prefixes, all_units, defaultLatex, default
               onChange={handleOnChange}
             />
             <Stack spacing={1} direction="row">
-              <Button variant='outlined'>リセット</Button>
+              <Button
+                variant='outlined'
+                onClick={reset}
+              >リセット</Button>
               <Button
                 variant='outlined'
                 onClick={() => calculate({ units, prefixes, all_units, parameters, setLatex, alerts, setAlerts })}
