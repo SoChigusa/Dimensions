@@ -5,13 +5,18 @@
     "dimension": 0
   },
   {
-    "name": "pi",
-    "value": 3.14159,
+    "name": "percent",
+    "value": 0.01,
     "dimension": 0
   },
   {
-    "name": "e",
-    "value": 3.02822e-01,
+    "name": "ppm",
+    "value": 1e-6,
+    "dimension": 0
+  },
+  {
+    "name": "ppb",
+    "value": 1e-9,
     "dimension": 0
   },
   {

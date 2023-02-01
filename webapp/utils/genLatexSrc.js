@@ -25,7 +25,7 @@ const unit2exp = unit => {
     str += '/ ';
     power *= -1;
   }
-  str += `\\mathrm{${unit.name}}${power2exp(power)}`;
+  str += `\\mathrm{${unit.name}}${power2exp(power)}\\,`;
   return str;
 }
 

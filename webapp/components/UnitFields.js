@@ -3,7 +3,7 @@ import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 
 const UnitFields = ({
-  isFirstUnit = false,
+  disableToRemove = false,
   id,
   defaultValue = { name: 'const', power: '1' },
   removeUnit,
@@ -34,7 +34,7 @@ const UnitFields = ({
         onChange={onChange}
       />
       <Box sx={{ display: 'inline' }}>
-        <IconButton aria-label='delete' disabled={isFirstUnit} color="secondary" onClick={removeUnit}>
+        <IconButton aria-label='delete' disabled={disableToRemove} color="secondary" onClick={removeUnit}>
           <RemoveCircleOutlineIcon />
         </IconButton>
         <IconButton aria-label='add' color="secondary" onClick={addUnit}>

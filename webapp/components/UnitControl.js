@@ -7,7 +7,7 @@ const UnitControl = ({ units, removeUnit, addUnit, onChange }) => {
   const giveUnitFields = (elem, index) => {
     return (
       <UnitFields
-        isFirstUnit={index == 0}
+        disableToRemove={units.length == 1 && index == 0}
         key={units[index].key}
         id={units[index].key}
         defaultValue={elem}

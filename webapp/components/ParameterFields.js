@@ -13,7 +13,7 @@ const ParameterFields = ({
     <>
       <Checkbox
         key={`check-box-${id}`}
-        disabled={isOutput}
+        disabled={isOutput || isConst}
         checked={checked}
         onChange={onCheck}
       />

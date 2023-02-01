@@ -2,6 +2,7 @@ import genKey from "@/utils/genKey";
 import { Box, IconButton, Stack, TextField, Typography } from "@mui/material";
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import { PlusOne } from "@mui/icons-material";
 import ParameterFields from "./ParameterFields";
 import UnitControl from "./UnitControl";
 
@@ -14,6 +15,18 @@ const genDefaultParameter = () => {
     power: '1',
     value: '1',
     units: [{ key: genKey(), name: 'const', power: '1' }]
+  }
+};
+
+// minimal input constants used as default
+const genDefaultConstant = () => {
+  return {
+    key: genKey(),
+    display: false,
+    name: '',
+    power: '1',
+    value: '1',
+    units: []
   }
 };
 
@@ -73,6 +86,14 @@ const InputParameterControl = ({ output, input, setParameters, onChange }) => {
         ...input.filter((e, i) => (i !== index))
       ]);
     };
+    const addConstant = () => {
+      setParameters([
+        output,
+        ...input.slice(0, index + 1),
+        genDefaultConstant(),
+        ...input.slice(index + 1)
+      ]);
+    }
     const addParameter = () => {
       setParameters([
         output,
@@ -116,8 +137,11 @@ const InputParameterControl = ({ output, input, setParameters, onChange }) => {
               onChange={onChange}
             />
             <Box sx={{ display: 'inline' }}>
-              <IconButton aria-label='delete' disabled={index == 0} color="primary" onClick={removeParameter}>
+              <IconButton aria-label='delete' disabled={input.length == 1 && index == 0} color="primary" onClick={removeParameter}>
                 <RemoveCircleOutlineIcon />
+              </IconButton>
+              <IconButton aria-label='add-constant' color="primary" onClick={addConstant}>
+                <PlusOne />
               </IconButton>
               <IconButton aria-label='add' color="primary" onClick={addParameter}>
                 <AddCircleOutlineIcon />

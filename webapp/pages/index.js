@@ -9,7 +9,7 @@ import { useState } from 'react';
 import genLatexSrc from '@/utils/genLatexSrc';
 
 export function getStaticProps() {
-  const { units, prefixes, all_units } = importUnitsData();
+  const { units, prefixes, all_units, constants } = importUnitsData();
 
   // default parameters when reset
   const defaultParameters = [
@@ -21,17 +21,17 @@ export function getStaticProps() {
   const exampleParameters = [
     // first parameter treated as output name & unit
     { key: genKey(), display: true, name: 'B', power: '1', value: '1', units: [{ key: genKey(), name: 'T', power: '1' }] },
-    { key: genKey(), display: false, name: '2', power: '1/2', value: '2', units: [] },
+    { key: genKey(), display: false, name: '2', power: '1/2', value: '1', units: [] },
     { key: genKey(), display: false, name: 'e', power: '-1', value: '1', units: [] },
     { key: genKey(), display: false, name: 'v_a', power: 1, value: '1e-3', units: [{ key: genKey(), name: 'const', power: '1' }] },
     { key: genKey(), display: true, name: 'g_{aee}', power: '1', value: '1e-10', units: [{ key: genKey(), name: 'const', power: '1' }] },
     { key: genKey(), display: true, name: '\\rho_a', power: '1/2', value: '0.3', units: [{ key: genKey(), name: 'GeV', power: '1' }, { key: genKey(), name: 'cm', power: '-3' }] },
   ];
 
-  return { props: { units, prefixes, all_units, defaultParameters, exampleParameters, }, };
+  return { props: { units, prefixes, all_units, constants, defaultParameters, exampleParameters, }, };
 }
 
-export default function Home({ units, prefixes, all_units, defaultParameters, exampleParameters, }) {
+export default function Home({ units, prefixes, all_units, constants, defaultParameters, exampleParameters, }) {
 
   // states for alert information
   const [alerts, setAlerts] = useState([]);
@@ -145,7 +145,7 @@ export default function Home({ units, prefixes, all_units, defaultParameters, ex
               >リセット</Button>
               <Button
                 variant='outlined'
-                onClick={() => calculate({ units, prefixes, all_units, parameters, setLatex, alerts, setAlerts })}
+                onClick={() => calculate({ units, prefixes, all_units, constants, parameters, setLatex, alerts, setAlerts })}
               >計算する</Button>
             </Stack>
           </Stack>

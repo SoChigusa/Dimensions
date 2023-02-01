@@ -5,6 +5,8 @@ const importUnitsData = () => {
   const units = JSON.parse(units_json);
   const prefixes_json = fs.readFileSync('data/prefixes.json');
   const prefixes = JSON.parse(prefixes_json);
+  const constants_json = fs.readFileSync('data/constants.json');
+  const constants = JSON.parse(constants_json);
 
   // list of available unit names and their decompositions
   const no_prefix_index = prefixes.findIndex((elem) => {
@@ -28,7 +30,7 @@ const importUnitsData = () => {
     });
   }).flat();
 
-  return { units, prefixes, all_units };
+  return { units, prefixes, all_units, constants };
 };
 
 export default importUnitsData;
