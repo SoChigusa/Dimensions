@@ -38,6 +38,28 @@ export default function Home({ units, prefixes, all_units, constants, defaultPar
 
   // states for output latex src
   const [latex, setLatex] = useState(genLatexSrc({ parameters: exampleParameters, value: 4e-18 }));
+  const copyToClipboard = () => {
+    const latexRaw = latex.substring(2, latex.length - 2);
+    if (navigator.clipboard) {
+      return navigator.clipboard.writeText(latexRaw).then(() => {
+        setAlerts([
+          ...alerts,
+          {
+            severity: 'success',
+            content: 'Successfully copied to the clipboard!',
+          }
+        ]);
+      });
+    } else {
+      setAlerts([
+        ...alerts,
+        {
+          severity: 'warning',
+          content: 'Your browser does not support copy to clipboard!',
+        }
+      ]);
+    }
+  };
 
   // states for input parameter information
   const [parameters, setParameters] = useState(exampleParameters);
@@ -113,12 +135,12 @@ export default function Home({ units, prefixes, all_units, constants, defaultPar
             {alerts.map((alert, index) => (
               <Alert
                 key={`alert-${index}`}
-                severity='error'
+                severity={alert.severity}
                 onClose={() => {
                   setAlerts(alerts.filter((e, i) => (i !== index)))
                 }}
               >
-                {alert}
+                {alert.content}
               </Alert>
             ))}
             <Typography variant='h5'>
@@ -127,7 +149,10 @@ export default function Home({ units, prefixes, all_units, constants, defaultPar
             <Paper variant='outlined'>
               <Latex>{latex}</Latex>
             </Paper>
-            <Button variant='outlined'>LaTeX ソースをコピー</Button>
+            <Button
+              variant='outlined'
+              onClick={copyToClipboard}
+            >LaTeX ソースをコピー</Button>
           </Stack>
           <Typography variant='h5' gutterBottom>
             入力データ

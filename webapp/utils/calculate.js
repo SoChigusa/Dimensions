@@ -1,15 +1,16 @@
 import genLatexSrc from "./genLatexSrc";
 
-const consteV = ({ constants, input, alerts, setAlerts }) => {
+const consteV = ({ constants, input, addAlerts }) => {
   let value = 1;
   const constant = constants.find(c => {
     return c.name == input
   });
   if (typeof constant === "undefined") {
     if (isNaN(input)) {
-      setAlerts([...alerts,
-      'Constant name "' + input + '" does not match any constant in the database!'
-      ]);
+      addAlerts({
+        severity: 'error',
+        content: 'Constant name "' + input + '" does not match any constant in the database!'
+      });
     } else {
       value = eval(input);
     }
@@ -19,7 +20,7 @@ const consteV = ({ constants, input, alerts, setAlerts }) => {
   return { value, dimension: 0 };
 }
 
-const uniteV = ({ units, prefixes, all_units, input, alerts, setAlerts }) => {
+const uniteV = ({ units, prefixes, all_units, input, addAlerts }) => {
   let value = 1.;
   let dimension = 0;
   input.map(unit => {
@@ -27,9 +28,10 @@ const uniteV = ({ units, prefixes, all_units, input, alerts, setAlerts }) => {
       return elem.name == unit.name;
     });
     if (typeof unit_info === "undefined") {
-      setAlerts([...alerts,
-      'Unit name "' + unit.name + '" does not match any unit in the database!'
-      ]);
+      addAlerts({
+        severity: 'error',
+        content: 'Unit name "' + unit.name + '" does not match any unit in the database!'
+      });
     } else {
       const p = prefixes[unit_info.prefix_id].value;
       const u = units[unit_info.unit_id].value;
@@ -43,21 +45,31 @@ const uniteV = ({ units, prefixes, all_units, input, alerts, setAlerts }) => {
 const calculate = ({ units, prefixes, all_units, constants, parameters, setLatex, alerts, setAlerts, }) => {
   let value = 1.;
   let dimension = 0;
+  let newAlerts = [];
+  const addAlerts = a => { newAlerts.push(a); }
   parameters.map((parameter, index) => {
     const ineV = parameter.units.length == 0 ?
-      consteV({ constants, input: parameter.name, alerts, setAlerts }) : // constant
-      uniteV({ units, prefixes, all_units, input: parameter.units, alerts, setAlerts }); // parameter
+      consteV({ constants, input: parameter.name, addAlerts }) : // constant
+      uniteV({ units, prefixes, all_units, input: parameter.units, addAlerts }); // parameter
     const power = index == 0 ? -eval(parameter.power) : eval(parameter.power);
     value *= (eval(parameter.value) * ineV.value) ** power;
     dimension += ineV.dimension * power;
   });
 
   if (dimension != 0) {
-    setAlerts([...alerts,
-      'Output mass dimension does not match the sum of input dimensions!'
-    ]);
+    addAlerts({
+      severity: 'error',
+      content: 'Output mass dimension does not match the sum of input dimensions!',
+    });
   } else {
     setLatex(genLatexSrc({ parameters, value }));
+  }
+
+  if (newAlerts.length > 0) {
+    setAlerts([
+      ...alerts,
+      ...newAlerts,
+    ]);
   }
 }
 
