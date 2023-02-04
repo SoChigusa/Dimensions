@@ -20,6 +20,7 @@ const ParameterFields = ({
       <TextField
         id={`parameter-${id}`}
         key={`parameter-${id}`}
+        size="small"
         label={isOutput ? "result name" : (isConst ? "constant" : "parameter")}
         defaultValue={defaultValue.name}
         onChange={onChange}
@@ -33,6 +34,7 @@ const ParameterFields = ({
             required
             id={`parameter-power-${id}`}
             key={`parameter-power-${id}`}
+            size="small"
             label="power"
             defaultValue={defaultValue.power}
             onChange={onChange}

@@ -1,0 +1,34 @@
+{
+  "output": [
+    {
+      "key": "output",
+      "display": true,
+      "name": "R",
+      "power": "1",
+      "value": "1",
+      "units": [
+        {
+          "key": "unit-1",
+          "name": "const",
+          "power": "1"
+        }
+      ]
+    }
+  ],
+  "input": [
+    {
+      "key": "input",
+      "display": false,
+      "name": "",
+      "power": "1",
+      "value": "1",
+      "units": [
+        {
+          "key": "unit-1",
+          "name": "const",
+          "power": "1"
+        }
+      ]
+    }
+  ]
+}

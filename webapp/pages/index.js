@@ -7,6 +7,7 @@ import { Alert, AppBar, Button, Container, Paper, Stack, Toolbar, Typography } f
 import ParameterControl from '@/components/ParameterControl';
 import { useState } from 'react';
 import genLatexSrc from '@/utils/genLatexSrc';
+import FileIO from '@/components/FileIO';
 
 export function getStaticProps() {
   const { units, prefixes, all_units, constants } = importUnitsData();
@@ -149,10 +150,15 @@ export default function Home({ units, prefixes, all_units, constants, defaultPar
             <Paper variant='outlined'>
               <Latex>{latex}</Latex>
             </Paper>
-            <Button
-              variant='outlined'
-              onClick={copyToClipboard}
-            >LaTeX ソースをコピー</Button>
+            <Stack spacing={1} direction="row">
+              <FileIO setParameters={setParameters} alerts={alerts} setAlerts={setAlerts} />
+              <FileIO isOutput parameters={parameters} />
+              <Button
+                variant='outlined'
+                size="small"
+                onClick={copyToClipboard}
+              >LaTeX ソースをコピー</Button>
+            </Stack>
           </Stack>
           <Typography variant='h5' gutterBottom>
             入力データ
@@ -166,10 +172,12 @@ export default function Home({ units, prefixes, all_units, constants, defaultPar
             <Stack spacing={1} direction="row">
               <Button
                 variant='outlined'
+                size='small'
                 onClick={reset}
               >リセット</Button>
               <Button
                 variant='outlined'
+                size='small'
                 onClick={() => calculate({ units, prefixes, all_units, constants, parameters, setLatex, alerts, setAlerts })}
               >計算する</Button>
             </Stack>

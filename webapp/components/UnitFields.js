@@ -16,6 +16,7 @@ const UnitFields = ({
         required
         id={`unit-${id}`}
         key={`unit-${id}`}
+        size="small"
         color="secondary"
         label="unit"
         defaultValue={defaultValue.name}
@@ -28,6 +29,7 @@ const UnitFields = ({
         required
         id={`unit-power-${id}`}
         key={`unit-power-${id}`}
+        size="small"
         color="secondary"
         label="unit power"
         defaultValue={defaultValue.power}

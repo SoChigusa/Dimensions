@@ -157,6 +157,7 @@ const InputParameterControl = ({ output, input, setParameters, onChange }) => {
                 required
                 id={`parameter-value-${input[index].key}`}
                 key={`parameter-value-${input[index].key}`}
+                size="small"
                 label="value"
                 defaultValue={elem.value}
                 onChange={onChange}
