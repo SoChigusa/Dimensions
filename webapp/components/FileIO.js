@@ -1,4 +1,4 @@
-import { alertsState, inputState, outputState } from "@/src/atom";
+import { alertsState, inputState, outputState, resultState } from "@/src/atom";
 import { useRecoilState } from "recoil";
 import { Button } from "@mui/material";
 
@@ -8,6 +8,7 @@ const FileIO = ({
   const [alerts, setAlerts] = useRecoilState(alertsState);
   const [output, setOutput] = useRecoilState(outputState);
   const [input, setInput] = useRecoilState(inputState);
+  const [result, setResult] = useRecoilState(resultState);
 
   const handleOnChange = event => {
     const reader = new FileReader();
@@ -15,6 +16,7 @@ const FileIO = ({
       const json = JSON.parse(e.target.result);
       setOutput(json.output);
       setInput(json.input);
+      setResult(json.result);
     };
     const file = event.target.files[0];
     if (file.type !== 'application/json') {
@@ -32,7 +34,8 @@ const FileIO = ({
   const handleOnClick = () => {
     const jsonString = JSON.stringify({
       "output": output,
-      "input": input
+      "input": input,
+      "result": result,
     });
     const blob = new Blob([jsonString], { type: 'text/plain' });
     const link = document.createElement("a");

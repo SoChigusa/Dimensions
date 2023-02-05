@@ -35,12 +35,12 @@ const genDefaultConstant = () => {
 const OutputParameterControl = ({ onChange }) => {
   const [output, setOutput] = useRecoilState(outputState);
   const removeUnit = i => {
-    let newParameter = output;
+    let newParameter = JSON.parse(JSON.stringify(output));
     newParameter.units.splice(i, 1);
     setOutput(newParameter);
   };
   const addUnit = (u, i) => {
-    let newParameter = output;
+    let newParameter = JSON.parse(JSON.stringify(output));
     newParameter.units.splice(i + 1, 0, u);
     setOutput(newParameter);
   };
@@ -68,7 +68,7 @@ const InputParameterControl = ({ onChange }) => {
   const [input, setInput] = useRecoilState(inputState);
   const giveParameterFields = (elem, index) => {
     const toggleDisplay = () => {
-      let newParameter = input[index];
+      let newParameter = JSON.parse(JSON.stringify(input[index])); // copy object instead of use reference
       newParameter.display = !newParameter.display;
       setInput([
         ...input.slice(0, index),
@@ -94,7 +94,7 @@ const InputParameterControl = ({ onChange }) => {
       ]);
     };
     const removeUnit = i => {
-      let newParameter = input[index];
+      let newParameter = JSON.parse(JSON.stringify(input[index]));
       newParameter.units.splice(i, 1);
       setInput([
         ...input.slice(0, index),
@@ -103,7 +103,7 @@ const InputParameterControl = ({ onChange }) => {
       ]);
     };
     const addUnit = (u, i) => {
-      let newParameter = input[index];
+      let newParameter = JSON.parse(JSON.stringify(input[index]));
       newParameter.units.splice(i + 1, 0, u);
       setInput([
         ...input.slice(0, index),

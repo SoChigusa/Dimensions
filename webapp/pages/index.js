@@ -1,6 +1,5 @@
-import { useState } from 'react';
 import { useRecoilState } from 'recoil';
-import { alertsState, defaultInput, defaultOutput, inputState, outputState } from '@/src/atom';
+import { alertsState, genDefaultInput, genDefaultOutput, inputState, outputState, resultState } from '@/src/atom';
 import calculate from '@/utils/calculate';
 import genLatexSrc from '@/utils/genLatexSrc';
 import importUnitsData from '@/utils/importUnitsData';
@@ -38,7 +37,7 @@ export default function Home({ units, prefixes, all_units, constants, }) {
         return subIndex != -1;
       });
     }
-    const newParameter = parameters[index];
+    let newParameter = JSON.parse(JSON.stringify(parameters[index])); // copy object instead of use reference
     switch (id) {
       case 'parameter-' + key:
         newParameter.name = value;
@@ -67,10 +66,10 @@ export default function Home({ units, prefixes, all_units, constants, }) {
     }
   }
 
-  // states for output latex src
-  const [latex, setLatex] = useState(genLatexSrc({ output: output, input: input, value: 1 }));
+  // states for calculation result
+  const [result, setResult] = useRecoilState(resultState);
   const copyToClipboard = async () => {
-    const latexRaw = latex.substring(2, latex.length - 2);
+    const latexRaw = result.latex.substring(2, result.latex.length - 2);
     if (navigator.clipboard) {
       await navigator.clipboard.writeText(latexRaw);
       setAlerts([
@@ -93,9 +92,12 @@ export default function Home({ units, prefixes, all_units, constants, }) {
 
   // reset function
   const reset = () => {
-    setOutput(defaultOutput);
-    setInput(defaultInput);
-    setLatex(genLatexSrc({ output: defaultOutput, input: defaultInput, value: 1 }))
+    setOutput(genDefaultOutput());
+    setInput(genDefaultInput());
+    setResult({
+      value: 1,
+      latex: genLatexSrc({ output: genDefaultOutput(), input: genDefaultInput(), value: 1 })
+    });
   };
 
   return (
@@ -137,7 +139,7 @@ export default function Home({ units, prefixes, all_units, constants, }) {
               出力結果
             </Typography>
             <Paper variant='outlined'>
-              <Latex>{latex}</Latex>
+              <Latex>{result.latex}</Latex>
             </Paper>
             <Stack spacing={1} direction="row">
               <FileIO />
@@ -165,7 +167,7 @@ export default function Home({ units, prefixes, all_units, constants, }) {
               <Button
                 variant='outlined'
                 size='small'
-                onClick={() => calculate({ units, prefixes, all_units, constants, output, input, setLatex, alerts, setAlerts })}
+                onClick={() => calculate({ units, prefixes, all_units, constants, output, input, setResult, alerts, setAlerts })}
               >計算する</Button>
             </Stack>
           </Stack>
