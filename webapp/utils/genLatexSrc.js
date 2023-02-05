@@ -34,32 +34,28 @@ const power2exp = power => {
   else return `^{${power}} `;
 }
 
-const genLatexSrc = ({ parameters, value }) => {
-  let latex = '\$\$';
-  parameters.map((parameter, index) => {
+const genLatexSrc = ({ output, input, value }) => {
+  let latex = `\$\$${output.name} \\sim ${val2exp(value)}\\, `;
+  output.units.map(u => {
+    latex += unit2exp(u);
+  });
+  input.map((parameter, index) => { // input parameters
     if (parameter.display) {
-      if (index == 0) { // output
-        latex += `${parameter.name} \\sim ${val2exp(value)}\\, `;
+      let power = eval(parameter.power);
+      if (power > 0) {
+        latex += `\\left(\\frac{${parameter.name}}{${val2exp(parameter.value)}\\,`;
         parameter.units.map(u => {
           latex += unit2exp(u);
         });
-      } else { // input parameters
-        let power = eval(parameter.power);
-        if (power > 0) {
-          latex += `\\left(\\frac{${parameter.name}}{${val2exp(parameter.value)}\\,`;
-          parameter.units.map(u => {
-            latex += unit2exp(u);
-          });
-        } else {
-          power *= -1;
-          latex += `\\left(\\frac{${val2exp(parameter.value)}`;
-          parameter.units.map(u => {
-            latex += unit2exp(u);
-          });
-          latex += `}{${parameter.name}`;
-        }
-        latex += `}\\right)${power2exp(power)}`;
+      } else {
+        power *= -1;
+        latex += `\\left(\\frac{${val2exp(parameter.value)}`;
+        parameter.units.map(u => {
+          latex += unit2exp(u);
+        });
+        latex += `}{${parameter.name}`;
       }
+      latex += `}\\right)${power2exp(power)}`;
     }
   });
   latex += '\$\$';

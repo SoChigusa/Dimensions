@@ -1,74 +1,34 @@
+import { useState } from 'react';
+import { useRecoilState } from 'recoil';
+import { alertsState, defaultInput, defaultOutput, inputState, outputState } from '@/src/atom';
 import calculate from '@/utils/calculate';
-import genKey from "@/utils/genKey";
+import genLatexSrc from '@/utils/genLatexSrc';
 import importUnitsData from '@/utils/importUnitsData';
 import Head from 'next/head';
 import Latex from 'react-latex-next'
 import { Alert, AppBar, Button, Container, Paper, Stack, Toolbar, Typography } from '@mui/material'
 import ParameterControl from '@/components/ParameterControl';
-import { useState } from 'react';
-import genLatexSrc from '@/utils/genLatexSrc';
 import FileIO from '@/components/FileIO';
 
 export function getStaticProps() {
   const { units, prefixes, all_units, constants } = importUnitsData();
-
-  // default parameters when reset
-  const defaultParameters = [
-    { key: genKey(), display: true, name: 'R', power: '1', value: '1', units: [{ key: genKey(), name: 'const', power: '1' }] },
-    { key: genKey(), display: false, name: '', power: '1', value: '1', units: [{ key: genKey(), name: 'const', power: '1' }] },
-  ];
-
-  // first example
-  const exampleParameters = [
-    // first parameter treated as output name & unit
-    { key: genKey(), display: true, name: 'B', power: '1', value: '1', units: [{ key: genKey(), name: 'T', power: '1' }] },
-    { key: genKey(), display: false, name: '2', power: '1/2', value: '1', units: [] },
-    { key: genKey(), display: false, name: 'e', power: '-1', value: '1', units: [] },
-    { key: genKey(), display: false, name: 'v_a', power: 1, value: '1e-3', units: [{ key: genKey(), name: 'const', power: '1' }] },
-    { key: genKey(), display: true, name: 'g_{aee}', power: '1', value: '1e-10', units: [{ key: genKey(), name: 'const', power: '1' }] },
-    { key: genKey(), display: true, name: '\\rho_a', power: '1/2', value: '0.3', units: [{ key: genKey(), name: 'GeV', power: '1' }, { key: genKey(), name: 'cm', power: '-3' }] },
-  ];
-
-  return { props: { units, prefixes, all_units, constants, defaultParameters, exampleParameters, }, };
+  return { props: { units, prefixes, all_units, constants, }, };
 }
 
-export default function Home({ units, prefixes, all_units, constants, defaultParameters, exampleParameters, }) {
+export default function Home({ units, prefixes, all_units, constants, }) {
 
   // states for alert information
-  const [alerts, setAlerts] = useState([]);
-
-  // states for output latex src
-  const [latex, setLatex] = useState(genLatexSrc({ parameters: exampleParameters, value: 4e-18 }));
-  const copyToClipboard = () => {
-    const latexRaw = latex.substring(2, latex.length - 2);
-    if (navigator.clipboard) {
-      return navigator.clipboard.writeText(latexRaw).then(() => {
-        setAlerts([
-          ...alerts,
-          {
-            severity: 'success',
-            content: 'Successfully copied to the clipboard!',
-          }
-        ]);
-      });
-    } else {
-      setAlerts([
-        ...alerts,
-        {
-          severity: 'warning',
-          content: 'Your browser does not support copy to clipboard!',
-        }
-      ]);
-    }
-  };
+  const [alerts, setAlerts] = useRecoilState(alertsState);
 
   // states for input parameter information
-  const [parameters, setParameters] = useState(exampleParameters);
+  const [output, setOutput] = useRecoilState(outputState);
+  const [input, setInput] = useRecoilState(inputState);
   const handleOnChange = event => {
-    const { name, value } = event.currentTarget;
+    const { value } = event.currentTarget;
     const id = event.currentTarget.id;
     const dist = id.split('-')[0];
     const key = id.split('-').pop();
+    const parameters = [output, ...input];
     let index, subIndex;
     if (dist === 'parameter') {
       index = parameters.findIndex(elem => elem.key === key);
@@ -96,17 +56,46 @@ export default function Home({ units, prefixes, all_units, constants, defaultPar
         newParameter.units[subIndex].power = value;
         break;
     }
-    setParameters([
-      ...parameters.slice(0, index),
-      newParameter,
-      ...parameters.slice(index + 1)
-    ]);
+    if (index == 0) { // modify output
+      setOutput(newParameter);
+    } else { // modify input
+      setInput([
+        ...parameters.slice(1, index),
+        newParameter,
+        ...parameters.slice(index + 1)
+      ]);
+    }
   }
+
+  // states for output latex src
+  const [latex, setLatex] = useState(genLatexSrc({ output: output, input: input, value: 1 }));
+  const copyToClipboard = async () => {
+    const latexRaw = latex.substring(2, latex.length - 2);
+    if (navigator.clipboard) {
+      await navigator.clipboard.writeText(latexRaw);
+      setAlerts([
+        ...alerts,
+        {
+          severity: 'success',
+          content: 'Successfully copied to the clipboard!'
+        }
+      ]);
+    } else {
+      setAlerts([
+        ...alerts,
+        {
+          severity: 'warning',
+          content: 'Your browser does not support copy to clipboard!',
+        }
+      ]);
+    }
+  };
 
   // reset function
   const reset = () => {
-    setParameters(defaultParameters);
-    setLatex(genLatexSrc({ parameters: defaultParameters, value: 1 }))
+    setOutput(defaultOutput);
+    setInput(defaultInput);
+    setLatex(genLatexSrc({ output: defaultOutput, input: defaultInput, value: 1 }))
   };
 
   return (
@@ -151,8 +140,8 @@ export default function Home({ units, prefixes, all_units, constants, defaultPar
               <Latex>{latex}</Latex>
             </Paper>
             <Stack spacing={1} direction="row">
-              <FileIO setParameters={setParameters} alerts={alerts} setAlerts={setAlerts} />
-              <FileIO isOutput parameters={parameters} />
+              <FileIO />
+              <FileIO isOutput />
               <Button
                 variant='outlined'
                 size="small"
@@ -165,8 +154,6 @@ export default function Home({ units, prefixes, all_units, constants, defaultPar
           </Typography>
           <Stack spacing={1} direction="column">
             <ParameterControl
-              parameters={parameters}
-              setParameters={setParameters}
               onChange={handleOnChange}
             />
             <Stack spacing={1} direction="row">
@@ -178,7 +165,7 @@ export default function Home({ units, prefixes, all_units, constants, defaultPar
               <Button
                 variant='outlined'
                 size='small'
-                onClick={() => calculate({ units, prefixes, all_units, constants, parameters, setLatex, alerts, setAlerts })}
+                onClick={() => calculate({ units, prefixes, all_units, constants, output, input, setLatex, alerts, setAlerts })}
               >計算する</Button>
             </Stack>
           </Stack>

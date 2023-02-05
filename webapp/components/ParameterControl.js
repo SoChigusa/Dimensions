@@ -1,4 +1,6 @@
+import { useRecoilState } from "recoil";
 import genKey from "@/utils/genKey";
+import { inputState, outputState } from "@/src/atom";
 import { Box, IconButton, Stack, TextField, Typography } from "@mui/material";
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
@@ -30,22 +32,17 @@ const genDefaultConstant = () => {
   }
 };
 
-const OutputParameterControl = ({ output, input, setParameters, onChange }) => {
+const OutputParameterControl = ({ onChange }) => {
+  const [output, setOutput] = useRecoilState(outputState);
   const removeUnit = i => {
     let newParameter = output;
     newParameter.units.splice(i, 1);
-    setParameters([
-      newParameter,
-      ...input,
-    ]);
+    setOutput(newParameter);
   };
   const addUnit = (u, i) => {
     let newParameter = output;
     newParameter.units.splice(i + 1, 0, u);
-    setParameters([
-      newParameter,
-      ...input,
-    ]);
+    setOutput(newParameter);
   };
 
   return (
@@ -67,36 +64,30 @@ const OutputParameterControl = ({ output, input, setParameters, onChange }) => {
   )
 };
 
-const InputParameterControl = ({ output, input, setParameters, onChange }) => {
-  // note a difference between indices of parameters and input (= parameters - output)
+const InputParameterControl = ({ onChange }) => {
+  const [input, setInput] = useRecoilState(inputState);
   const giveParameterFields = (elem, index) => {
     const toggleDisplay = () => {
       let newParameter = input[index];
       newParameter.display = !newParameter.display;
-      setParameters([
-        output,
+      setInput([
         ...input.slice(0, index),
         newParameter,
         ...input.slice(index + 1)
       ]);
     }
     const removeParameter = () => {
-      setParameters([
-        output,
-        ...input.filter((e, i) => (i !== index))
-      ]);
+      setInput(input.filter((e, i) => (i !== index)));
     };
     const addConstant = () => {
-      setParameters([
-        output,
+      setInput([
         ...input.slice(0, index + 1),
         genDefaultConstant(),
         ...input.slice(index + 1)
       ]);
     }
     const addParameter = () => {
-      setParameters([
-        output,
+      setInput([
         ...input.slice(0, index + 1),
         genDefaultParameter(),
         ...input.slice(index + 1)
@@ -105,8 +96,7 @@ const InputParameterControl = ({ output, input, setParameters, onChange }) => {
     const removeUnit = i => {
       let newParameter = input[index];
       newParameter.units.splice(i, 1);
-      setParameters([
-        output,
+      setInput([
         ...input.slice(0, index),
         newParameter,
         ...input.slice(index + 1)
@@ -115,8 +105,7 @@ const InputParameterControl = ({ output, input, setParameters, onChange }) => {
     const addUnit = (u, i) => {
       let newParameter = input[index];
       newParameter.units.splice(i + 1, 0, u);
-      setParameters([
-        output,
+      setInput([
         ...input.slice(0, index),
         newParameter,
         ...input.slice(index + 1)
@@ -182,13 +171,11 @@ const InputParameterControl = ({ output, input, setParameters, onChange }) => {
   )
 };
 
-const ParameterControl = ({ parameters, setParameters, onChange }) => {
-  const output = parameters[0];
-  const input = parameters.slice(1);
+const ParameterControl = ({ onChange }) => {
   return (
     <>
-      {OutputParameterControl({ output, input, setParameters, onChange })}
-      {InputParameterControl({ output, input, setParameters, onChange })}
+      {OutputParameterControl({ onChange })}
+      {InputParameterControl({ onChange })}
     </>
   );
 };

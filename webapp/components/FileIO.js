@@ -1,20 +1,20 @@
+import { alertsState, inputState, outputState } from "@/src/atom";
+import { useRecoilState } from "recoil";
 import { Button } from "@mui/material";
-import { useRouter } from "next/router";
 
 const FileIO = ({
   isOutput = false,
-  parameters,
-  setParameters,
-  alerts,
-  setAlerts,
 }) => {
-  const router = useRouter();
+  const [alerts, setAlerts] = useRecoilState(alertsState);
+  const [output, setOutput] = useRecoilState(outputState);
+  const [input, setInput] = useRecoilState(inputState);
 
   const handleOnChange = event => {
     const reader = new FileReader();
     reader.onload = e => {
       const json = JSON.parse(e.target.result);
-      setParameters([...json.output, ...json.input]);
+      setOutput(json.output);
+      setInput(json.input);
     };
     const file = event.target.files[0];
     if (file.type !== 'application/json') {
@@ -31,10 +31,8 @@ const FileIO = ({
 
   const handleOnClick = () => {
     const jsonString = JSON.stringify({
-      "output": [
-        parameters[0]
-      ],
-      "input": parameters.slice(1)
+      "output": output,
+      "input": input
     });
     const blob = new Blob([jsonString], { type: 'text/plain' });
     const link = document.createElement("a");
