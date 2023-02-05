@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useRecoilState } from 'recoil';
 import { alertsState, genDefaultInput, genDefaultOutput, inputState, outputState, resultState } from '@/src/atom';
 import calculate from '@/utils/calculate';
@@ -5,7 +6,7 @@ import genLatexSrc from '@/utils/genLatexSrc';
 import importUnitsData from '@/utils/importUnitsData';
 import Head from 'next/head';
 import Latex from 'react-latex-next'
-import { Alert, AppBar, Button, Container, Paper, Stack, Toolbar, Typography } from '@mui/material'
+import { Alert, AppBar, Button, Container, Paper, Stack, TextField, Toolbar, Typography } from '@mui/material'
 import ParameterControl from '@/components/ParameterControl';
 import FileIO from '@/components/FileIO';
 
@@ -16,8 +17,9 @@ export function getStaticProps() {
 
 export default function Home({ units, prefixes, all_units, constants, }) {
 
-  // states for alert information
+  // states for alert, significant digits information
   const [alerts, setAlerts] = useRecoilState(alertsState);
+  const [digits, setDigits] = useState(1);
 
   // states for input parameter information
   const [output, setOutput] = useRecoilState(outputState);
@@ -96,7 +98,7 @@ export default function Home({ units, prefixes, all_units, constants, }) {
     setInput(genDefaultInput());
     setResult({
       value: 1,
-      latex: genLatexSrc({ output: genDefaultOutput(), input: genDefaultInput(), value: 1 })
+      latex: genLatexSrc({ output: genDefaultOutput(), input: genDefaultInput(), digits: digits, value: 1 })
     });
   };
 
@@ -164,10 +166,20 @@ export default function Home({ units, prefixes, all_units, constants, }) {
                 size='small'
                 onClick={reset}
               >リセット</Button>
+              <TextField
+                id="digits"
+                size="small"
+                sx={{ width: 120 }}
+                type="number"
+                label="significant digits"
+                defaultValue={digits}
+                InputProps={{ inputProps: { min: 1, max: 5 } }}
+                onChange={e => { setDigits(eval(e.currentTarget.value)) }}
+              />
               <Button
                 variant='outlined'
                 size='small'
-                onClick={() => calculate({ units, prefixes, all_units, constants, output, input, setResult, alerts, setAlerts })}
+                onClick={() => calculate({ units, prefixes, all_units, constants, output, input, digits, setResult, alerts, setAlerts })}
               >計算する</Button>
             </Stack>
           </Stack>

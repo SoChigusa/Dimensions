@@ -42,7 +42,7 @@ const uniteV = ({ units, prefixes, all_units, input, addAlerts }) => {
   return { value, dimension };
 }
 
-const calculate = ({ units, prefixes, all_units, constants, output, input, setResult, alerts, setAlerts, }) => {
+const calculate = ({ units, prefixes, all_units, constants, output, input, digits, setResult, alerts, setAlerts, }) => {
   let value = 1.;
   let dimension = 0;
   let newAlerts = [];
@@ -62,11 +62,6 @@ const calculate = ({ units, prefixes, all_units, constants, output, input, setRe
       severity: 'error',
       content: 'Output mass dimension does not match the sum of input dimensions!',
     });
-  } else {
-    setResult({
-      value: value,
-      latex: genLatexSrc({ output, input, value })
-    });
   }
 
   if (newAlerts.length > 0) {
@@ -74,6 +69,11 @@ const calculate = ({ units, prefixes, all_units, constants, output, input, setRe
       ...alerts,
       ...newAlerts,
     ]);
+  } else {
+    setResult({
+      value: value,
+      latex: genLatexSrc({ output, input, digits, value })
+    });
   }
 }
 

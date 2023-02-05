@@ -1,6 +1,6 @@
-const val2exp = value => {
+const val2exp = ({ value, digits }) => {
   const exp = Math.floor(Math.log10(value));
-  const vf = Math.round(value / Math.pow(10., exp));
+  const vf = (value / Math.pow(10, exp)).toFixed(digits - 1);
   let str;
   if (vf == 1) {
     if (exp == 0) str = '1 ';
@@ -34,8 +34,8 @@ const power2exp = power => {
   else return `^{${power}} `;
 }
 
-const genLatexSrc = ({ output, input, value }) => {
-  let latex = `\$\$${output.name} \\sim ${val2exp(value)}\\, `;
+const genLatexSrc = ({ output, input, digits, value }) => {
+  let latex = `\$\$${output.name} \\sim ${val2exp({ value, digits })}\\, `;
   output.units.map(u => {
     latex += unit2exp(u);
   });
@@ -43,13 +43,13 @@ const genLatexSrc = ({ output, input, value }) => {
     if (parameter.display) {
       let power = eval(parameter.power);
       if (power > 0) {
-        latex += `\\left(\\frac{${parameter.name}}{${val2exp(parameter.value)}\\,`;
+        latex += `\\left(\\frac{${parameter.name}}{${val2exp({ value: parameter.value, digits })}\\,`;
         parameter.units.map(u => {
           latex += unit2exp(u);
         });
       } else {
         power *= -1;
-        latex += `\\left(\\frac{${val2exp(parameter.value)}`;
+        latex += `\\left(\\frac{${val2exp({ value: parameter.value, digits })}\\,`;
         parameter.units.map(u => {
           latex += unit2exp(u);
         });
