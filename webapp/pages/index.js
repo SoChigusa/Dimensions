@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import { useRecoilState } from 'recoil';
-import { alertsState, genDefaultInput, genDefaultOutput, inputState, outputState, resultState, unitsDataState } from '@/src/atom';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { alertsState, genDefaultInput, genDefaultOutput, inputState, optionsState, outputState, resultState, unitsDataState } from '@/src/atom';
 import calculate from '@/utils/calculate';
 import genLatexSrc from '@/utils/genLatexSrc';
 import importUnitsData from '@/utils/importUnitsData';
@@ -9,7 +9,7 @@ import Latex from 'react-latex-next'
 import { Alert, AppBar, Button, Container, IconButton, Paper, Stack, TextField, Toolbar, Tooltip, Typography } from '@mui/material'
 import ParameterControl from '@/components/ParameterControl';
 import FileIO from '@/components/FileIO';
-import { Calculate, Clear, ContentCopy, Settings } from '@mui/icons-material';
+import { Calculate, CalculateRounded, Clear, ContentCopy, Settings } from '@mui/icons-material';
 import Options from '@/components/Options';
 
 export function getStaticProps() {
@@ -26,14 +26,14 @@ export default function Home({ units, prefixes, all_units, constants, }) {
   }, []);
 
   // states for options, alerts, significant digits information
+  const options = useRecoilValue(optionsState);
   const [openOptions, setOpenOptions] = useState(false);
   const [alerts, setAlerts] = useRecoilState(alertsState);
-  const [digits, setDigits] = useState(1);
 
   // states for input parameter information
   const [output, setOutput] = useRecoilState(outputState);
   const [input, setInput] = useRecoilState(inputState);
-  const handleOnChange = (event, setId = null, setValue = null) => {
+  const handleOnChange = (event, setId = null, setValue = null, onBlur = false) => {
     let value, id;
     if (setId == null) {
       id = event.currentTarget.id;
@@ -77,12 +77,17 @@ export default function Home({ units, prefixes, all_units, constants, }) {
     }
     if (index == 0) { // modify output
       setOutput(newParameter);
+      if (onBlur)
+        handleOnBlur({ newOutput: newParameter });
     } else { // modify input
-      setInput([
+      const newInput = [
         ...parameters.slice(1, index),
         newParameter,
         ...parameters.slice(index + 1)
-      ]);
+      ];
+      setInput(newInput);
+      if (onBlur)
+        handleOnBlur({ newInput: newInput });
     }
   }
 
@@ -116,8 +121,23 @@ export default function Home({ units, prefixes, all_units, constants, }) {
     setInput(genDefaultInput());
     setResult({
       value: 1,
-      latex: genLatexSrc({ output: genDefaultOutput(), input: genDefaultInput(), digits: digits, value: 1 })
+      latex: genLatexSrc({ output: genDefaultOutput(), input: genDefaultInput(), digits: options.digits, value: 1 })
     });
+  };
+
+  // calculation request
+  const calculationRequest = ({ livePreview, newOutput = null, newInput = null, } = {}) => {
+    if (newInput != null)
+      calculate({ units, prefixes, all_units, constants, output, input: newInput, options, setResult, setAlerts, livePreview });
+    else if (newOutput != null)
+      calculate({ units, prefixes, all_units, constants, output: newOutput, input, options, setResult, setAlerts, livePreview });
+    else
+      calculate({ units, prefixes, all_units, constants, output, input, options, setResult, setAlerts, livePreview });
+  };
+  const handleOnBlur = ({ newOutput = null, newInput = null } = {}) => {
+    if (options.livePreview) {
+      calculationRequest({ livePreview: true, newOutput, newInput });
+    }
   };
 
   return (
@@ -181,7 +201,7 @@ export default function Home({ units, prefixes, all_units, constants, }) {
                   <Settings />
                 </IconButton>
               </Tooltip>
-              <Options open={openOptions} setOpen={setOpenOptions} />
+              <Options open={openOptions} setOpen={setOpenOptions} onBlur={handleOnBlur} />
             </Stack>
           </Stack>
           <Typography variant='h5' gutterBottom>
@@ -190,18 +210,9 @@ export default function Home({ units, prefixes, all_units, constants, }) {
           <Stack spacing={1} direction="column">
             <ParameterControl
               onChange={handleOnChange}
+              onBlur={handleOnBlur}
             />
             <Stack spacing={1} direction="row">
-              <TextField
-                id="digits"
-                size="small"
-                sx={{ width: 120 }}
-                type="number"
-                label="significant digits"
-                defaultValue={digits}
-                InputProps={{ inputProps: { min: 1, max: 5 } }}
-                onChange={e => { setDigits(eval(e.currentTarget.value)) }}
-              />
               {/* <Tooltip title="計算実行" arrow>
                 <IconButton
                   aria-label='calculate'
@@ -223,7 +234,7 @@ export default function Home({ units, prefixes, all_units, constants, }) {
               <Button
                 variant='outlined'
                 size='small'
-                onClick={() => calculate({ units, prefixes, all_units, constants, output, input, digits, setResult, alerts, setAlerts })}
+                onClick={() => calculationRequest({ livePreview: false })}
               >計算する</Button>
               <Button
                 variant='outlined'

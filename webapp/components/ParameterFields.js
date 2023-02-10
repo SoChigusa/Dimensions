@@ -8,6 +8,7 @@ const ParameterFields = ({
   isConst = false,
   onCheck,
   onChange,
+  onBlur,
 }) => {
   return (
     <>
@@ -24,6 +25,7 @@ const ParameterFields = ({
         label={isOutput ? "result name" : (isConst ? "constant" : "parameter")}
         defaultValue={defaultValue.name}
         onChange={onChange}
+        onBlur={onBlur}
       />
       {isOutput ? (<></>) : (
         <>
@@ -39,6 +41,7 @@ const ParameterFields = ({
             label="power"
             defaultValue={defaultValue.power}
             onChange={onChange}
+            onBlur={onBlur}
           />
         </>
       )

@@ -12,6 +12,7 @@ const UnitFields = ({
   removeUnit,
   addUnit,
   onChange,
+  onBlur,
 } = {}) => {
   const unitsData = useRecoilValue(unitsDataState);
   const unitsList = unitsData.map(u => u.name);
@@ -32,8 +33,9 @@ const UnitFields = ({
         value={name}
         onChange={(event, newName) => {
           setName(newName);
-          onChange(event, `unit-${id}`, newName);
+          onChange(event, `unit-${id}`, newName, true);
         }}
+        onBlur={onBlur}
         inputValue={inputName}
         onInputChange={(event, newName) => {
           setInputName(newName);
@@ -44,12 +46,10 @@ const UnitFields = ({
           color="secondary"
           label="unit"
           onChange={(event) => {
-            setInputName(event.currentTarget.value);
             setName(event.currentTarget.value);
-          }}
-          onBlur={(event) => {
             onChange(event);
           }}
+          onBlur={onBlur}
         />}
       />
       <Typography variant='body1'>
@@ -65,6 +65,7 @@ const UnitFields = ({
         label="unit power"
         defaultValue={defaultValue.power}
         onChange={onChange}
+        onBlur={onBlur}
       />
       <Box sx={{ display: 'inline' }}>
         <IconButton aria-label='delete' disabled={disableToRemove} color="secondary" onClick={removeUnit}>

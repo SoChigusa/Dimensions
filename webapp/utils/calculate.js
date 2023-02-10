@@ -42,9 +42,9 @@ const uniteV = ({ units, prefixes, all_units, input, addAlerts }) => {
   return { value, dimension };
 }
 
-const calculate = ({ units, prefixes, all_units, constants, output, input, digits, setResult, alerts, setAlerts, }) => {
+const calculate = ({ units, prefixes, all_units, constants, output, input, options, setResult, setAlerts, livePreview }) => {
   let value = 1.;
-  let dimension = 0;
+  let outputDimension, dimension = 0;
   let newAlerts = [];
   const parameters = [output, ...input]
   const addAlerts = a => { newAlerts.push(a); }
@@ -55,21 +55,26 @@ const calculate = ({ units, prefixes, all_units, constants, output, input, digit
     const power = index == 0 ? -eval(parameter.power) : eval(parameter.power); // only difference btw output & input
     value *= (eval(parameter.value) * ineV.value) ** power;
     dimension += ineV.dimension * power;
+    if (index == 0) outputDimension = -dimension;
   });
 
   if (dimension != 0) {
-    addAlerts({
-      severity: 'error',
-      content: 'Output mass dimension does not match the sum of input dimensions!',
-    });
+    if (livePreview) {
+      addAlerts({
+        severity: 'warning',
+        content: `Output mass dimension = ${outputDimension}, input mass dimension = ${dimension + outputDimension}`,
+      });
+    } else {
+      addAlerts({
+        severity: 'error',
+        content: `Output mass dimension = ${outputDimension} does not match the sum of input mass dimensions = ${dimension + outputDimension}!`,
+      });
+    }
   }
 
-  if (newAlerts.length > 0) {
-    setAlerts([
-      ...alerts,
-      ...newAlerts,
-    ]);
-  } else {
+  setAlerts(newAlerts);
+  if (dimension == 0 && newAlerts.length == 0) {
+    const digits = options.digits;
     setResult({
       value: value,
       latex: genLatexSrc({ output, input, digits, value })

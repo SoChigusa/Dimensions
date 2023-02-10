@@ -25,24 +25,26 @@ const genDefaultConstant = () => {
   return {
     key: genKey(),
     display: false,
-    name: '',
+    name: '1',
     power: '1',
     value: '1',
     units: []
   }
 };
 
-const OutputParameterControl = ({ onChange }) => {
+const OutputParameterControl = ({ onChange, onBlur }) => {
   const [output, setOutput] = useRecoilState(outputState);
   const removeUnit = i => {
     let newParameter = JSON.parse(JSON.stringify(output));
     newParameter.units.splice(i, 1);
     setOutput(newParameter);
+    onBlur({ newOutput: newParameter });
   };
   const addUnit = (u, i) => {
     let newParameter = JSON.parse(JSON.stringify(output));
     newParameter.units.splice(i + 1, 0, u);
     setOutput(newParameter);
+    onBlur({ newOutput: newParameter });
   };
 
   return (
@@ -53,63 +55,77 @@ const OutputParameterControl = ({ onChange }) => {
         isOutput
         defaultValue={{ name: output.name }}
         onChange={onChange}
+        onBlur={onBlur}
       />
       <UnitControl
         units={output.units}
         removeUnit={removeUnit}
         addUnit={addUnit}
         onChange={onChange}
+        onBlur={onBlur}
       />
     </Stack>
   )
 };
 
-const InputParameterControl = ({ onChange }) => {
+const InputParameterControl = ({ onChange, onBlur }) => {
   const [input, setInput] = useRecoilState(inputState);
   const giveParameterFields = (elem, index) => {
     const toggleDisplay = () => {
       let newParameter = JSON.parse(JSON.stringify(input[index])); // copy object instead of use reference
       newParameter.display = !newParameter.display;
-      setInput([
+      const newInput = [
         ...input.slice(0, index),
         newParameter,
         ...input.slice(index + 1)
-      ]);
-    }
+      ];
+      setInput(newInput);
+      onBlur({ newInput: newInput });
+    };
     const removeParameter = () => {
-      setInput(input.filter((e, i) => (i !== index)));
+      const newInput = input.filter((e, i) => (i !== index));
+      setInput(newInput);
+      onBlur({ newInput: newInput });
     };
     const addConstant = () => {
-      setInput([
+      const newInput = [
         ...input.slice(0, index + 1),
         genDefaultConstant(),
         ...input.slice(index + 1)
-      ]);
-    }
+      ];
+      setInput(newInput);
+      onBlur({ newInput: newInput });
+    };
     const addParameter = () => {
-      setInput([
+      const newInput = [
         ...input.slice(0, index + 1),
         genDefaultParameter(),
         ...input.slice(index + 1)
-      ]);
+      ];
+      setInput(newInput);
+      onBlur({ newInput: newInput });
     };
     const removeUnit = i => {
       let newParameter = JSON.parse(JSON.stringify(input[index]));
       newParameter.units.splice(i, 1);
-      setInput([
+      const newInput = [
         ...input.slice(0, index),
         newParameter,
         ...input.slice(index + 1)
-      ]);
+      ];
+      setInput(newInput);
+      onBlur({ newInput: newInput });
     };
     const addUnit = (u, i) => {
       let newParameter = JSON.parse(JSON.stringify(input[index]));
       newParameter.units.splice(i + 1, 0, u);
-      setInput([
+      const newInput = [
         ...input.slice(0, index),
         newParameter,
         ...input.slice(index + 1)
-      ]);
+      ];
+      setInput(newInput);
+      onBlur({ newInput: newInput });
     };
 
     return (
@@ -124,6 +140,7 @@ const InputParameterControl = ({ onChange }) => {
               isConst={elem.units.length == 0}
               onCheck={toggleDisplay}
               onChange={onChange}
+              onBlur={onBlur}
             />
             <Box sx={{ display: 'inline' }}>
               <IconButton aria-label='delete' disabled={input.length == 1 && index == 0} color="primary" onClick={removeParameter}>
@@ -150,12 +167,14 @@ const InputParameterControl = ({ onChange }) => {
                 label="value"
                 defaultValue={elem.value}
                 onChange={onChange}
+                onBlur={onBlur}
               />
               <UnitControl
                 units={elem.units}
                 removeUnit={removeUnit}
                 addUnit={addUnit}
                 onChange={onChange}
+                onBlur={onBlur}
               />
             </Stack>
           ) : (<></>)}
@@ -171,11 +190,11 @@ const InputParameterControl = ({ onChange }) => {
   )
 };
 
-const ParameterControl = ({ onChange }) => {
+const ParameterControl = ({ onChange, onBlur }) => {
   return (
     <>
-      {OutputParameterControl({ onChange })}
-      {InputParameterControl({ onChange })}
+      {OutputParameterControl({ onChange, onBlur })}
+      {InputParameterControl({ onChange, onBlur })}
     </>
   );
 };

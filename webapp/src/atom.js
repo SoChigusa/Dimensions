@@ -8,6 +8,16 @@ export const unitsDataState = atom({
   default: [],
 });
 
+// option information
+export const optionsState = atom({
+  key: 'options',
+  default: {
+    livePreview: true,
+    stringInput: true,
+    digits: 1,
+  }
+});
+
 // alert information
 export const alertsState = atom({
   key: 'alerts',

@@ -9,6 +9,7 @@ const importUnitsData = () => {
   const constants = JSON.parse(constants_json);
 
   // list of available unit names and their decompositions
+  const no_pre_index = prefixes.findIndex(p => p.name === "");
   let all_units = prefixes.map((pre_elem, pre_index) => {
     return units.map((unit_elem, unit_index) => {
       if (unit_elem.dimension != 0) {
@@ -20,7 +21,7 @@ const importUnitsData = () => {
       } else { // no prefix for constants
         return {
           name: unit_elem.name,
-          prefix_id: pre_index,
+          prefix_id: no_pre_index,
           unit_id: unit_index,
         };
       }

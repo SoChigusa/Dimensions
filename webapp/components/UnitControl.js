@@ -3,7 +3,7 @@ import genKey from "@/utils/genKey";
 import { Typography, Stack } from "@mui/material"
 import UnitFields from "./UnitFields"
 
-const UnitControl = ({ units, removeUnit, addUnit, onChange }) => {
+const UnitControl = ({ units, removeUnit, addUnit, onChange, onBlur }) => {
   const giveUnitFields = (elem, index) => {
     return (
       <UnitFields
@@ -11,9 +11,12 @@ const UnitControl = ({ units, removeUnit, addUnit, onChange }) => {
         key={units[index].key}
         id={units[index].key}
         defaultValue={elem}
-        removeUnit={() => removeUnit(index)}
+        removeUnit={() => {
+          removeUnit(index);
+        }}
         addUnit={() => addUnit({ key: genKey(), name: 'const', power: '1' }, index)}
         onChange={onChange}
+        onBlur={onBlur}
       />
     )
   };
