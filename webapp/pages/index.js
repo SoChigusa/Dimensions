@@ -6,9 +6,11 @@ import genLatexSrc from '@/utils/genLatexSrc';
 import importUnitsData from '@/utils/importUnitsData';
 import Head from 'next/head';
 import Latex from 'react-latex-next'
-import { Alert, AppBar, Button, Container, Paper, Stack, TextField, Toolbar, Typography } from '@mui/material'
+import { Alert, AppBar, Button, Container, IconButton, Paper, Stack, TextField, Toolbar, Tooltip, Typography } from '@mui/material'
 import ParameterControl from '@/components/ParameterControl';
 import FileIO from '@/components/FileIO';
+import { Calculate, Clear, ContentCopy, Settings } from '@mui/icons-material';
+import Options from '@/components/Options';
 
 export function getStaticProps() {
   const { units, prefixes, all_units, constants } = importUnitsData();
@@ -23,7 +25,8 @@ export default function Home({ units, prefixes, all_units, constants, }) {
     setUnitsData(all_units);
   }, []);
 
-  // states for all units, alert, significant digits information
+  // states for options, alerts, significant digits information
+  const [openOptions, setOpenOptions] = useState(false);
   const [alerts, setAlerts] = useRecoilState(alertsState);
   const [digits, setDigits] = useState(1);
 
@@ -161,11 +164,24 @@ export default function Home({ units, prefixes, all_units, constants, }) {
             <Stack spacing={1} direction="row">
               <FileIO />
               <FileIO isOutput />
-              <Button
-                variant='outlined'
-                size="small"
-                onClick={copyToClipboard}
-              >LaTeX ソースをコピー</Button>
+              <Tooltip title="LaTeX ソースをコピー" arrow>
+                <IconButton
+                  aria-label='settings'
+                  color='primary'
+                  onClick={copyToClipboard}
+                >
+                  <ContentCopy />
+                </IconButton>
+              </Tooltip>
+              <Tooltip title="設定" arrow>
+                <IconButton
+                  aria-label='settings'
+                  onClick={() => { setOpenOptions(true); }}
+                >
+                  <Settings />
+                </IconButton>
+              </Tooltip>
+              <Options open={openOptions} setOpen={setOpenOptions} />
             </Stack>
           </Stack>
           <Typography variant='h5' gutterBottom>
@@ -176,11 +192,6 @@ export default function Home({ units, prefixes, all_units, constants, }) {
               onChange={handleOnChange}
             />
             <Stack spacing={1} direction="row">
-              <Button
-                variant='outlined'
-                size='small'
-                onClick={reset}
-              >リセット</Button>
               <TextField
                 id="digits"
                 size="small"
@@ -191,11 +202,34 @@ export default function Home({ units, prefixes, all_units, constants, }) {
                 InputProps={{ inputProps: { min: 1, max: 5 } }}
                 onChange={e => { setDigits(eval(e.currentTarget.value)) }}
               />
+              {/* <Tooltip title="計算実行" arrow>
+                <IconButton
+                  aria-label='calculate'
+                  color='primary'
+                  onClick={() => calculate({ units, prefixes, all_units, constants, output, input, digits, setResult, alerts, setAlerts })}
+                >
+                  <Calculate />
+                </IconButton>
+              </Tooltip>
+              <Tooltip title="リセット" arrow>
+                <IconButton
+                  aria-label='reset'
+                  color='primary'
+                  onClick={reset}
+                >
+                  <Clear />
+                </IconButton>
+              </Tooltip> */}
               <Button
                 variant='outlined'
                 size='small'
                 onClick={() => calculate({ units, prefixes, all_units, constants, output, input, digits, setResult, alerts, setAlerts })}
               >計算する</Button>
+              <Button
+                variant='outlined'
+                size='small'
+                onClick={reset}
+              >リセット</Button>
             </Stack>
           </Stack>
         </Container>

@@ -1,6 +1,7 @@
 import { alertsState, inputState, outputState, resultState } from "@/src/atom";
 import { useRecoilState } from "recoil";
-import { Button } from "@mui/material";
+import { IconButton, Tooltip } from "@mui/material";
+import { FileOpen, SaveAlt } from "@mui/icons-material";
 
 const FileIO = ({
   isOutput = false,
@@ -46,28 +47,32 @@ const FileIO = ({
 
   if (isOutput) {
     return (
-      <Button
-        variant='outlined'
-        size="small"
-        onClick={isOutput ? handleOnClick : () => { }}
-      >
-        式をファイルへ保存
-      </Button>
+      <Tooltip title="式をファイルへ保存" arrow>
+        <IconButton
+          aria-label='save'
+          color="primary"
+          onClick={isOutput ? handleOnClick : () => { }}
+        >
+          <SaveAlt />
+        </IconButton>
+      </Tooltip>
     );
   } else {
     return (
-      <Button
-        variant='outlined'
-        component='label'
-        size="small"
-      >
-        式をファイルから読み込み
-        <input
-          type="file"
-          hidden
-          onChange={handleOnChange}
-        />
-      </Button>
+      <Tooltip title="式をファイルから読み込み" arrow>
+        <IconButton
+          aria-label='file-open'
+          color="primary"
+          component='label'
+        >
+          <FileOpen />
+          <input
+            type="file"
+            hidden
+            onChange={handleOnChange}
+          />
+        </IconButton>
+      </Tooltip>
     );
   }
 }
