@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
-import { alertsState, genDefaultInput, genDefaultOutput, inputState, outputState, resultState } from '@/src/atom';
+import { alertsState, genDefaultInput, genDefaultOutput, inputState, outputState, resultState, unitsDataState } from '@/src/atom';
 import calculate from '@/utils/calculate';
 import genLatexSrc from '@/utils/genLatexSrc';
 import importUnitsData from '@/utils/importUnitsData';
@@ -17,16 +17,31 @@ export function getStaticProps() {
 
 export default function Home({ units, prefixes, all_units, constants, }) {
 
-  // states for alert, significant digits information
+  // set all units information
+  const [unitsData, setUnitsData] = useRecoilState(unitsDataState);
+  useEffect(() => {
+    setUnitsData(all_units);
+  }, []);
+
+  // states for all units, alert, significant digits information
   const [alerts, setAlerts] = useRecoilState(alertsState);
   const [digits, setDigits] = useState(1);
 
   // states for input parameter information
   const [output, setOutput] = useRecoilState(outputState);
   const [input, setInput] = useRecoilState(inputState);
-  const handleOnChange = event => {
-    const { value } = event.currentTarget;
-    const id = event.currentTarget.id;
+  const handleOnChange = (event, setId = null, setValue = null) => {
+    let value, id;
+    if (setId == null) {
+      id = event.currentTarget.id;
+    } else {
+      id = setId;
+    }
+    if (setValue == null) {
+      value = event.currentTarget.value;
+    } else {
+      value = setValue;
+    }
     const dist = id.split('-')[0];
     const key = id.split('-').pop();
     const parameters = [output, ...input];

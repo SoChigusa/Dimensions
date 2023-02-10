@@ -9,10 +9,7 @@ const importUnitsData = () => {
   const constants = JSON.parse(constants_json);
 
   // list of available unit names and their decompositions
-  const no_prefix_index = prefixes.findIndex((elem) => {
-    return elem.name == "";
-  });
-  const all_units = prefixes.map((pre_elem, pre_index) => {
+  let all_units = prefixes.map((pre_elem, pre_index) => {
     return units.map((unit_elem, unit_index) => {
       if (unit_elem.dimension != 0) {
         return {
@@ -20,15 +17,18 @@ const importUnitsData = () => {
           prefix_id: pre_index,
           unit_id: unit_index,
         };
-      } else {
+      } else { // no prefix for constants
         return {
           name: unit_elem.name,
-          prefix_id: no_prefix_index,
+          prefix_id: pre_index,
           unit_id: unit_index,
         };
       }
     });
   }).flat();
+  all_units = Array.from( // delete duplicate
+    new Map(all_units.map(u => [u.name, u])).values()
+  );
 
   return { units, prefixes, all_units, constants };
 };

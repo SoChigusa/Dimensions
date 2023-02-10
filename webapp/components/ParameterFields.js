@@ -35,6 +35,7 @@ const ParameterFields = ({
             id={`parameter-power-${id}`}
             key={`parameter-power-${id}`}
             size="small"
+            sx={{ width: 100 }}
             label="power"
             defaultValue={defaultValue.power}
             onChange={onChange}

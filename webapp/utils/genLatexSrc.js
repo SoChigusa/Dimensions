@@ -22,7 +22,7 @@ const unit2exp = unit => {
   let str = '';
   let power = eval(unit.power);
   if (power < 0) {
-    str += '/ ';
+    str += '/\\, ';
     power *= -1;
   }
   str += `\\mathrm{${unit.name}}${power2exp(power)}\\,`;

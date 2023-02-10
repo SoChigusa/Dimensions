@@ -2,6 +2,12 @@ import genKey from "@/utils/genKey";
 import genLatexSrc from "@/utils/genLatexSrc";
 import { atom } from "recoil";
 
+// all units information
+export const unitsDataState = atom({
+  key: 'unitsData',
+  default: [],
+});
+
 // alert information
 export const alertsState = atom({
   key: 'alerts',
