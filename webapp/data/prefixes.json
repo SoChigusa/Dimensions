@@ -37,6 +37,7 @@
   },
   {
     "name": "mu",
+    "latex": "\\mu",
     "value": 1e-6
   },
   {

@@ -77,7 +77,7 @@ const calculate = ({ units, prefixes, all_units, constants, output, input, optio
     const digits = options.digits;
     setResult({
       value: value,
-      latex: genLatexSrc({ output, input, digits, value })
+      latex: genLatexSrc({ units, prefixes, all_units, output, input, digits, value })
     });
   }
 }

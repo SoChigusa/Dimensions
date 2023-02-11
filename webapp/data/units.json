@@ -1,11 +1,13 @@
 [
   {
     "name": "const",
+    "latex": "",
     "value": 1,
     "dimension": 0
   },
   {
     "name": "percent",
+    "latex": "\\%",
     "value": 0.01,
     "dimension": 0
   },
@@ -41,6 +43,7 @@
   },
   {
     "name": "Msolar",
+    "latex": "M_\\odot",
     "value": 1.1158e+66,
     "dimension": 1
   },
@@ -81,6 +84,7 @@
   },
   {
     "name": "A",
+    "latex": "\\mathring{A}",
     "value": 5.06773e-4,
     "dimension": -1
   },

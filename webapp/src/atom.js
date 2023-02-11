@@ -62,10 +62,6 @@ export const resultState = atom({
   key: 'result',
   default: {
     value: 1,
-    latex: genLatexSrc({
-      output: genDefaultOutput({ defaultKeys: true }),
-      input: genDefaultInput({ defaultKeys: true }),
-      value: 1,
-    }),
+    latex: "$$R \\sim 1$$",
   },
 });

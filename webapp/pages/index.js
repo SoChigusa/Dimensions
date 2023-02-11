@@ -6,10 +6,10 @@ import genLatexSrc from '@/utils/genLatexSrc';
 import importUnitsData from '@/utils/importUnitsData';
 import Head from 'next/head';
 import Latex from 'react-latex-next'
-import { Alert, AppBar, Button, Container, IconButton, Paper, Stack, TextField, Toolbar, Tooltip, Typography } from '@mui/material'
+import { Alert, AppBar, Button, Container, IconButton, Paper, Stack, Toolbar, Tooltip, Typography } from '@mui/material'
 import ParameterControl from '@/components/ParameterControl';
 import FileIO from '@/components/FileIO';
-import { Calculate, CalculateRounded, Clear, ContentCopy, Settings } from '@mui/icons-material';
+import { Calculate, Clear, ContentCopy, Settings } from '@mui/icons-material';
 import Options from '@/components/Options';
 
 export function getStaticProps() {
@@ -121,7 +121,7 @@ export default function Home({ units, prefixes, all_units, constants, }) {
     setInput(genDefaultInput());
     setResult({
       value: 1,
-      latex: genLatexSrc({ output: genDefaultOutput(), input: genDefaultInput(), digits: options.digits, value: 1 })
+      latex: genLatexSrc({ units, prefixes, all_units, output: genDefaultOutput(), input: genDefaultInput(), digits: options.digits, value: 1 })
     });
   };
 

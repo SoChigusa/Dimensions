@@ -14,18 +14,22 @@ const val2exp = ({ value, digits }) => {
   return str;
 }
 
-const unit2exp = unit => {
-  if (unit.name == 'const') {
-    return ' ';
-  }
+const unit2exp = ({ units, prefixes, all_units, unit }) => {
+  const unit_info = all_units.find((elem) => {
+    return elem.name == unit.name;
+  });
+  const prefix = prefixes[unit_info.prefix_id];
+  const unitBody = units[unit_info.unit_id];
+  const prefixLatex = 'latex' in prefix ? prefix.latex : prefix.name;
+  const unitBodyLatex = 'latex' in unitBody ? unitBody.latex : unitBody.name;
 
-  let str = '';
+  let str = unit.name == 'const' ? '' : '\\,';
   let power = eval(unit.power);
   if (power < 0) {
     str += '/\\, ';
     power *= -1;
   }
-  str += `\\mathrm{${unit.name}}${power2exp(power)}\\,`;
+  str += `\\mathrm{${prefixLatex} ${unitBodyLatex}}${power2exp(power)}`;
   return str;
 }
 
@@ -34,24 +38,24 @@ const power2exp = power => {
   else return `^{${power}} `;
 }
 
-const genLatexSrc = ({ output, input, digits, value }) => {
-  let latex = `\$\$${output.name} \\sim ${val2exp({ value, digits })}\\, `;
-  output.units.map(u => {
-    latex += unit2exp(u);
+const genLatexSrc = ({ units, prefixes, all_units, output, input, digits, value }) => {
+  let latex = `\$\$${output.name} \\sim ${val2exp({ value, digits })}`;
+  output.units.map(unit => {
+    latex += unit2exp({ units, prefixes, all_units, unit });
   });
   input.map((parameter, index) => { // input parameters
     if (parameter.display) {
       let power = eval(parameter.power);
       if (power > 0) {
-        latex += `\\left(\\frac{${parameter.name}}{${val2exp({ value: parameter.value, digits })}\\,`;
-        parameter.units.map(u => {
-          latex += unit2exp(u);
+        latex += `\\left(\\frac{${parameter.name}}{${val2exp({ value: parameter.value, digits })}`;
+        parameter.units.map(unit => {
+          latex += unit2exp({ units, prefixes, all_units, unit });
         });
       } else {
         power *= -1;
-        latex += `\\left(\\frac{${val2exp({ value: parameter.value, digits })}\\,`;
-        parameter.units.map(u => {
-          latex += unit2exp(u);
+        latex += `\\left(\\frac{${val2exp({ value: parameter.value, digits })}`;
+        parameter.units.map(unit => {
+          latex += unit2exp({ units, prefixes, all_units, unit });
         });
         latex += `}{${parameter.name}`;
       }
