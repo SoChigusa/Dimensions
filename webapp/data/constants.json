@@ -1,10 +1,12 @@
 [
   {
     "name": "pi",
+    "latex": "\\pi",
     "value": 3.14159
   },
   {
     "name": "exp",
+    "latex": "\\exp",
     "value": 2.71828
   },
   {

@@ -1,4 +1,4 @@
-import genLatexSrc from "./genLatexSrc";
+import { genLatexSrc } from "./genLatexSrc";
 
 const consteV = ({ constants, input, addAlerts }) => {
   let value = 1;

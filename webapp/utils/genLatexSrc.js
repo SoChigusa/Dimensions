@@ -1,4 +1,4 @@
-const val2exp = ({ value, digits }) => {
+export const val2exp = ({ value, digits }) => {
   const exp = Math.floor(Math.log10(value));
   const vf = (value / Math.pow(10, exp)).toFixed(digits - 1);
   let str;
@@ -38,7 +38,7 @@ const power2exp = power => {
   else return `^{${power}} `;
 }
 
-const genLatexSrc = ({ units, prefixes, all_units, output, input, digits, value }) => {
+export const genLatexSrc = ({ units, prefixes, all_units, output, input, digits, value }) => {
   let latex = `\$\$${output.name} \\sim ${val2exp({ value, digits })}`;
   output.units.map(unit => {
     latex += unit2exp({ units, prefixes, all_units, unit });
@@ -65,5 +65,3 @@ const genLatexSrc = ({ units, prefixes, all_units, output, input, digits, value 
   latex += '\$\$';
   return latex;
 };
-
-export default genLatexSrc;

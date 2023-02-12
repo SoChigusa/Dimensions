@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { alertsState, genDefaultInput, genDefaultOutput, inputState, optionsState, outputState, resultState, unitsDataState } from '@/src/atom';
 import calculate from '@/utils/calculate';
-import genLatexSrc from '@/utils/genLatexSrc';
+import { genLatexSrc } from '@/utils/genLatexSrc';
 import importUnitsData from '@/utils/importUnitsData';
 import Head from 'next/head';
 import Latex from 'react-latex-next'
