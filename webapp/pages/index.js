@@ -25,6 +25,37 @@ export default function Home({ units, prefixes, all_units, constants, }) {
     setUnitsData(all_units);
   }, []);
 
+  // units information function
+  const extractConstantInfo = input => {
+    let isAbsent = false, value;
+    const constant = constants.find(c => {
+      return c.name == input
+    });
+    if (typeof constant === "undefined") {
+      if (isNaN(input)) {
+        isAbsent = true;
+      } else {
+        value = eval(input);
+      }
+    } else {
+      value = constant.value;
+    }
+    return { isAbsent, value };
+  };
+  const extractUnitInfo = input => {
+    let isAbsent = false, prefix, unit;
+    const unit_info = all_units.find(elem => {
+      return elem.name == input.name;
+    });
+    if (typeof unit_info === "undefined") {
+      isAbsent = true;
+    } else {
+      prefix = prefixes[unit_info.prefix_id];
+      unit = units[unit_info.unit_id];
+    }
+    return { isAbsent, prefix, unit };
+  };
+
   // states for options, alerts, significant digits information
   const options = useRecoilValue(optionsState);
   const [openOptions, setOpenOptions] = useState(false);
@@ -128,11 +159,11 @@ export default function Home({ units, prefixes, all_units, constants, }) {
   // calculation request
   const calculationRequest = ({ livePreview, newOutput = null, newInput = null, } = {}) => {
     if (newInput != null)
-      calculate({ units, prefixes, all_units, constants, output, input: newInput, options, setResult, setAlerts, livePreview });
+      calculate({ extractConstantInfo, extractUnitInfo, output, input: newInput, options, setResult, setAlerts, livePreview });
     else if (newOutput != null)
-      calculate({ units, prefixes, all_units, constants, output: newOutput, input, options, setResult, setAlerts, livePreview });
+      calculate({ extractConstantInfo, extractUnitInfo, output: newOutput, input, options, setResult, setAlerts, livePreview });
     else
-      calculate({ units, prefixes, all_units, constants, output, input, options, setResult, setAlerts, livePreview });
+      calculate({ extractConstantInfo, extractUnitInfo, output, input, options, setResult, setAlerts, livePreview });
   };
   const handleOnBlur = ({ newOutput = null, newInput = null } = {}) => {
     if (options.livePreview) {
@@ -217,7 +248,7 @@ export default function Home({ units, prefixes, all_units, constants, }) {
                 <IconButton
                   aria-label='calculate'
                   color='primary'
-                  onClick={() => calculate({ units, prefixes, all_units, constants, output, input, digits, setResult, alerts, setAlerts })}
+                  onClick={() => calculate({ extractConstantInfo, extractUnitInfo, output, input, digits, setResult, alerts, setAlerts })}
                 >
                   <Calculate />
                 </IconButton>
