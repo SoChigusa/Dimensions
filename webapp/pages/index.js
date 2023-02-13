@@ -152,7 +152,7 @@ export default function Home({ units, prefixes, all_units, constants, }) {
     setInput(genDefaultInput());
     setResult({
       value: 1,
-      latex: genLatexSrc({ units, prefixes, all_units, output: genDefaultOutput(), input: genDefaultInput(), digits: options.digits, value: 1 })
+      latex: genLatexSrc({ extractUnitInfo, output: genDefaultOutput(), input: genDefaultInput(), digits: options.digits, value: 1 })
     });
   };
 

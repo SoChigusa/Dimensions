@@ -1,5 +1,6 @@
 import { alertsState, inputState, outputState, resultState } from "@/src/atom";
 import { useRecoilState } from "recoil";
+import genKey from "@/utils/genKey";
 import { IconButton, Tooltip } from "@mui/material";
 import { FileOpen, SaveAlt } from "@mui/icons-material";
 
@@ -14,7 +15,19 @@ const FileIO = ({
   const handleOnChange = event => {
     const reader = new FileReader();
     reader.onload = e => {
-      const json = JSON.parse(e.target.result);
+      let json = JSON.parse(e.target.result);
+
+      // generate key information
+      json.output.key = genKey();
+      json.output.units.map(u => {
+        u.key = genKey();
+      });
+      json.input.map(p => {
+        p.key = genKey();
+        p.units.map(u => {
+          u.key = genKey();
+        });
+      });
       setOutput(json.output);
       setInput(json.input);
       setResult(json.result);
@@ -33,9 +46,23 @@ const FileIO = ({
   };
 
   const handleOnClick = () => {
+    // delete all key information
+    const outputInfo = JSON.parse(JSON.stringify(output));
+    const inputInfo = JSON.parse(JSON.stringify(input));
+    delete outputInfo.key;
+    outputInfo.units.map(u => {
+      delete u.key;
+    });
+    inputInfo.map(p => {
+      delete p.key;
+      p.units.map(u => {
+        delete u.key;
+      });
+    });
+
     const jsonString = JSON.stringify({
-      "output": output,
-      "input": input,
+      "output": outputInfo,
+      "input": inputInfo,
       "result": result,
     });
     const blob = new Blob([jsonString], { type: 'text/plain' });
