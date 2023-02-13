@@ -154,6 +154,7 @@ export default function Home({ units, prefixes, all_units, constants, }) {
       value: 1,
       latex: genLatexSrc({ extractUnitInfo, output: genDefaultOutput(), input: genDefaultInput(), digits: options.digits, value: 1 })
     });
+    setAlerts([]);
   };
 
   // calculation request

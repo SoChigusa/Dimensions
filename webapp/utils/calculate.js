@@ -1,4 +1,5 @@
 import { genLatexSrc } from "./genLatexSrc";
+import str2float from "./str2float";
 
 const consteV = ({ extractConstantInfo, input, addAlerts }) => {
   let value = 1;
@@ -19,19 +20,23 @@ const uniteV = ({ extractUnitInfo, input, addAlerts }) => {
   let dimension = 0;
   input.map(unit => {
     const unitInfo = extractUnitInfo(unit);
-    if (unitInfo.isAbsent) {
-      addAlerts({
-        severity: 'error',
-        content: 'Unit name "' + unit.name + '" does not match any unit in the database!'
-      });
-    } else if (isNaN(unit.power)) {
-      addAlerts({
-        severity: 'error',
-        content: 'Unit power "' + unit.power + '" is not a number!'
-      });
+    const powerInfo = str2float(unit.power);
+    if (!unitInfo.isAbsent && !powerInfo.inputIsNaN) {
+      value *= (unitInfo.prefix.value * unitInfo.unit.value) ** powerInfo.value;
+      dimension += unitInfo.unit.dimension * powerInfo.value;
     } else {
-      value *= (unitInfo.prefix.value * unitInfo.unit.value) ** eval(unit.power);
-      dimension += unitInfo.unit.dimension * eval(unit.power);
+      if (unitInfo.isAbsent) {
+        addAlerts({
+          severity: 'error',
+          content: 'Unit name "' + unit.name + '" does not match any unit in the database!'
+        });
+      }
+      if (powerInfo.inputIsNaN) {
+        addAlerts({
+          severity: 'error',
+          content: 'Unit power "' + unit.power + '" is not a number!'
+        });
+      }
     }
   });
   return { value, dimension };
@@ -47,19 +52,21 @@ const calculate = ({ extractConstantInfo, extractUnitInfo, output, input, option
     const ineV = parameter.units.length == 0 ?
       consteV({ extractConstantInfo, input: parameter.name, addAlerts }) : // constant
       uniteV({ extractUnitInfo, input: parameter.units, addAlerts }); // parameter
-    if (!isNaN(parameter.value) && !isNaN(parameter.power)) {
-      const power = index == 0 ? -eval(parameter.power) : eval(parameter.power); // only difference btw output & input
-      value *= (eval(parameter.value) * ineV.value) ** power;
+    const valueInfo = str2float(parameter.value);
+    const powerInfo = str2float(parameter.power);
+    if (!valueInfo.inputIsNaN && !powerInfo.inputIsNaN) {
+      const power = index == 0 ? -powerInfo.value : powerInfo.value; // only difference btw output & input
+      value *= (valueInfo.value * ineV.value) ** power;
       dimension += ineV.dimension * power;
       if (index == 0) outputDimension = -dimension;
     } else {
-      if (isNaN(parameter.value)) {
+      if (valueInfo.inputIsNaN) {
         addAlerts({
           severity: 'error',
           content: 'Parameter value "' + parameter.value + '" is not a number!'
         });
       }
-      if (isNaN(parameter.power)) {
+      if (powerInfo.inputIsNaN) {
         addAlerts({
           severity: 'error',
           content: 'Parameter power "' + parameter.power + '" is not a number!'
@@ -68,6 +75,8 @@ const calculate = ({ extractConstantInfo, extractUnitInfo, output, input, option
     }
   });
 
+  // dimension check upto the maximum precision (5 digits)
+  dimension = dimension.toFixed(4);
   if (dimension != 0) {
     if (livePreview) {
       addAlerts({
@@ -83,7 +92,7 @@ const calculate = ({ extractConstantInfo, extractUnitInfo, output, input, option
   }
 
   setAlerts(newAlerts);
-  if (dimension == 0 && newAlerts.length == 0) {
+  if (newAlerts.length == 0) {
     const digits = options.digits;
     setResult({
       value: value,
