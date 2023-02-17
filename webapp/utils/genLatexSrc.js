@@ -15,7 +15,7 @@ export const val2exp = ({ valStr, options, isOutput = false } = {}) => {
       else if (exp == 1) str = '10 ';
       else str = `10^{${exp}} `;
     } else {
-      str = `${vf} `;
+      str = `${vf.toPrecision(options.digits)} `;
       if (exp == 1) str += `\\times 10 `;
       else if (exp != 0) str += `\\times 10^{${exp}} `;
     }
