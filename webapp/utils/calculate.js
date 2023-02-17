@@ -1,4 +1,5 @@
 import { genLatexSrc } from "./genLatexSrc";
+import roundToPrecision from "./roundToPrecision";
 import str2float from "./str2float";
 
 const consteV = ({ extractConstantInfo, input, addAlerts }) => {
@@ -43,7 +44,7 @@ const uniteV = ({ extractUnitInfo, input, addAlerts }) => {
 }
 
 const calculate = ({ extractConstantInfo, extractUnitInfo, output, input, options, setResult, setAlerts, livePreview }) => {
-  let value = 1.;
+  let result = 1.;
   let outputDimension, dimension = 0;
   let newAlerts = [];
   const parameters = [output, ...input]
@@ -56,7 +57,7 @@ const calculate = ({ extractConstantInfo, extractUnitInfo, output, input, option
     const powerInfo = str2float(parameter.power);
     if (!valueInfo.inputIsNaN && !powerInfo.inputIsNaN) {
       const power = index == 0 ? -powerInfo.value : powerInfo.value; // only difference btw output & input
-      value *= (valueInfo.value * ineV.value) ** power;
+      result *= (valueInfo.value * ineV.value) ** power;
       dimension += ineV.dimension * power;
       if (index == 0) outputDimension = -dimension;
     } else {
@@ -76,7 +77,7 @@ const calculate = ({ extractConstantInfo, extractUnitInfo, output, input, option
   });
 
   // dimension check upto the maximum precision (5 digits)
-  dimension = dimension.toFixed(4);
+  dimension = roundToPrecision(dimension, 5);
   if (dimension != 0) {
     if (livePreview) {
       addAlerts({
@@ -93,10 +94,9 @@ const calculate = ({ extractConstantInfo, extractUnitInfo, output, input, option
 
   setAlerts(newAlerts);
   if (newAlerts.length == 0) {
-    const digits = options.digits;
     setResult({
-      value: value,
-      latex: genLatexSrc({ extractUnitInfo, output, input, digits, value })
+      result: result,
+      latex: genLatexSrc({ extractUnitInfo, output, input, options, result })
     });
   }
 }

@@ -151,8 +151,8 @@ export default function Home({ units, prefixes, all_units, constants, }) {
     setOutput(genDefaultOutput());
     setInput(genDefaultInput());
     setResult({
-      value: 1,
-      latex: genLatexSrc({ extractUnitInfo, output: genDefaultOutput(), input: genDefaultInput(), digits: options.digits, value: 1 })
+      result: 1,
+      latex: genLatexSrc({ extractUnitInfo, output: genDefaultOutput(), input: genDefaultInput(), options: options, result: 1 }),
     });
     setAlerts([]);
   };
