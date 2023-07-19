@@ -1,8 +1,10 @@
 import { useRecoilState } from "recoil";
 import { optionsState } from "@/src/atom";
 import { Checkbox, Dialog, DialogContent, DialogContentText, DialogTitle, Stack, TextField, Typography } from "@mui/material";
+import useLocale from "@/utils/useLocale";
 
 const Options = ({ open, setOpen, onBlur }) => {
+  const { locale, t } = useLocale();
   const [options, setOptions] = useRecoilState(optionsState);
 
   return (
@@ -13,7 +15,7 @@ const Options = ({ open, setOpen, onBlur }) => {
         onBlur();
       }}
     >
-      <DialogTitle>Settings</DialogTitle>
+      <DialogTitle>{t.SETTINGS}</DialogTitle>
       <DialogContent>
         <Stack spacing={1}>
           <Typography>
@@ -26,7 +28,7 @@ const Options = ({ open, setOpen, onBlur }) => {
                 setOptions(newOptions);
               }}
             />
-            ライブプレビュー
+            {t.LIVE_PREVIEW}
           </Typography>
           <Typography>
             <Checkbox
@@ -38,14 +40,14 @@ const Options = ({ open, setOpen, onBlur }) => {
                 setOptions(newOptions);
               }}
             />
-            入力式を文字列として扱って出力
+            {t.STRING_INPUT}
           </Typography>
           <TextField
             id="digits"
             size="small"
             sx={{ width: 120 }}
             type="number"
-            label="significant digits"
+            label={t.DIGITS}
             defaultValue={options.digits}
             InputProps={{ inputProps: { min: 1, max: 5 } }}
             onChange={e => {

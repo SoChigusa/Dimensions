@@ -1,8 +1,10 @@
 import { val2exp } from "@/utils/genLatexSrc";
 import importUnitsData from "@/utils/importUnitsData";
 import Head from "next/head";
-import { AppBar, Container, Stack, Toolbar, Typography } from "@mui/material";
+import { Container, Stack } from "@mui/material";
 import DataTable from "@/components/DataTable";
+import Header from "@/components/Header";
+import useLocale from "@/utils/useLocale";
 
 export function getStaticProps() {
   const { units, prefixes, constants } = importUnitsData();
@@ -10,6 +12,7 @@ export function getStaticProps() {
 }
 
 export default function Home({ units, prefixes, constants, }) {
+  const { locale, t } = useLocale();
   const optionsConstant = {
     stringInput: false,
     digits: 3,
@@ -32,15 +35,7 @@ export default function Home({ units, prefixes, constants, }) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main>
-        <AppBar position="static" sx={{ mb: 2 }}>
-          <Container maxWidth='lg'>
-            <Toolbar disableGutters>
-              <Typography variant="h4" component="div" sx={{ flexGrow: 1 }}>
-                Dimensions
-              </Typography>
-            </Toolbar>
-          </Container>
-        </AppBar>
+        <Header />
         <Container maxWidth='lg'>
           <Stack
             spacing={1}
@@ -48,21 +43,21 @@ export default function Home({ units, prefixes, constants, }) {
             sx={{ display: 'flex', mb: 2 }}
           >
             <DataTable
-              title="Constants"
+              title={t.CONSTANTS}
               data={constants}
               input={constant => constant.name}
               latex={constant => 'latex' in constant ? constant.latex : constant.name}
               value={constant => val2exp({ valStr: constant.value.toString(10), options: optionsConstant, })}
             />
             <DataTable
-              title="Prefixes"
+              title={t.SI_PREFIXES}
               data={prefixes}
               input={prefix => prefix.name}
               latex={prefix => 'latex' in prefix ? prefix.latex : prefix.name}
               value={prefix => val2exp({ valStr: prefix.value.toString(10), options: optionsPrefix, })}
             />
             <DataTable
-              title="Units"
+              title={t.UNITS}
               data={units}
               input={unit => unit.name}
               latex={unit => 'latex' in unit ? unit.latex : unit.name}

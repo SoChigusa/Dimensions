@@ -3,10 +3,12 @@ import { useRecoilState } from "recoil";
 import genKey from "@/utils/genKey";
 import { IconButton, Tooltip } from "@mui/material";
 import { FileOpen, SaveAlt } from "@mui/icons-material";
+import useLocale from "@/utils/useLocale";
 
 const FileIO = ({
   isOutput = false,
 }) => {
+  const { locale, t } = useLocale();
   const [alerts, setAlerts] = useRecoilState(alertsState);
   const [output, setOutput] = useRecoilState(outputState);
   const [input, setInput] = useRecoilState(inputState);
@@ -37,7 +39,7 @@ const FileIO = ({
       setAlerts([...alerts,
       {
         severity: 'warning',
-        content: '対応しているデータ形式はJSONのみです'
+        content: t.JSON_ERROR
       }]);
     } else {
       reader.readAsText(file);
@@ -74,7 +76,7 @@ const FileIO = ({
 
   if (isOutput) {
     return (
-      <Tooltip title="式をファイルへ保存" arrow>
+      <Tooltip title={t.WRITE} arrow>
         <IconButton
           aria-label='save'
           color="primary"
@@ -86,7 +88,7 @@ const FileIO = ({
     );
   } else {
     return (
-      <Tooltip title="式をファイルから読み込み" arrow>
+      <Tooltip title={t.READ} arrow>
         <IconButton
           aria-label='file-open'
           color="primary"

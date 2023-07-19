@@ -6,11 +6,13 @@ import { genLatexSrc } from '@/utils/genLatexSrc';
 import importUnitsData from '@/utils/importUnitsData';
 import Head from 'next/head';
 import Latex from 'react-latex-next'
-import { Alert, AppBar, Button, Container, IconButton, Paper, Stack, Toolbar, Tooltip, Typography } from '@mui/material'
+import { Alert, Button, Container, IconButton, Paper, Stack, Tooltip, Typography } from '@mui/material'
 import ParameterControl from '@/components/ParameterControl';
 import FileIO from '@/components/FileIO';
-import { Calculate, Clear, ContentCopy, Settings } from '@mui/icons-material';
+import { ContentCopy, Settings } from '@mui/icons-material';
 import Options from '@/components/Options';
+import Header from '@/components/Header';
+import useLocale from '@/utils/useLocale';
 
 export function getStaticProps() {
   const { units, prefixes, all_units, constants } = importUnitsData();
@@ -18,6 +20,7 @@ export function getStaticProps() {
 }
 
 export default function Home({ units, prefixes, all_units, constants, }) {
+  const { locale, t } = useLocale();
 
   // set all units information
   const [unitsData, setUnitsData] = useRecoilState(unitsDataState);
@@ -181,15 +184,7 @@ export default function Home({ units, prefixes, all_units, constants, }) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main>
-        <AppBar position="static" sx={{ mb: 2 }}>
-          <Container maxWidth='lg'>
-            <Toolbar disableGutters>
-              <Typography variant="h4" component="div" sx={{ flexGrow: 1 }}>
-                Dimensions
-              </Typography>
-            </Toolbar>
-          </Container>
-        </AppBar>
+        <Header />
         <Container maxWidth='lg'>
           <Stack
             spacing={1}
@@ -208,7 +203,7 @@ export default function Home({ units, prefixes, all_units, constants, }) {
               </Alert>
             ))}
             <Typography variant='h5'>
-              出力結果
+              {t.OUTPUT}
             </Typography>
             <Paper variant='outlined'>
               <Latex>{result.latex}</Latex>
@@ -216,7 +211,7 @@ export default function Home({ units, prefixes, all_units, constants, }) {
             <Stack spacing={1} direction="row">
               <FileIO />
               <FileIO isOutput />
-              <Tooltip title="LaTeX ソースをコピー" arrow>
+              <Tooltip title={t.COPY} arrow>
                 <IconButton
                   aria-label='settings'
                   color='primary'
@@ -225,7 +220,7 @@ export default function Home({ units, prefixes, all_units, constants, }) {
                   <ContentCopy />
                 </IconButton>
               </Tooltip>
-              <Tooltip title="設定" arrow>
+              <Tooltip title={t.SETTINGS} arrow>
                 <IconButton
                   aria-label='settings'
                   onClick={() => { setOpenOptions(true); }}
@@ -237,7 +232,7 @@ export default function Home({ units, prefixes, all_units, constants, }) {
             </Stack>
           </Stack>
           <Typography variant='h5' gutterBottom>
-            入力データ
+            {t.INPUT}
           </Typography>
           <Stack spacing={1} direction="column">
             <ParameterControl
@@ -267,12 +262,12 @@ export default function Home({ units, prefixes, all_units, constants, }) {
                 variant='outlined'
                 size='small'
                 onClick={() => calculationRequest({ livePreview: false })}
-              >計算する</Button>
+              >{t.CALC}</Button>
               <Button
                 variant='outlined'
                 size='small'
                 onClick={reset}
-              >リセット</Button>
+              >{t.CLEAR}</Button>
             </Stack>
           </Stack>
         </Container>
