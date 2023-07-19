@@ -18,7 +18,12 @@ const Link = ({ children, href, target, localeChange = false, color = 'primary',
       else
         newLocale = 'en';
       return (
-        <NextLink href={{ pathname: href, query: query }} locale={newLocale} passHref>
+        <NextLink
+          href={{ pathname: href, query: query }}
+          style={{ color: color, textDecoration: 'none' }}
+          locale={newLocale}
+          passHref
+        >
           <MUILink color={color} underline="none">
             {children}
           </MUILink>
@@ -26,7 +31,11 @@ const Link = ({ children, href, target, localeChange = false, color = 'primary',
       );
     } else {
       return (
-        <NextLink href={{ pathname: href, query: query }} passHref>
+        <NextLink
+          href={{ pathname: href, query: query }}
+          style={{ color: color, textDecoration: 'none' }}
+          passHref
+        >
           <MUILink color={color} underline="none">
             {children}
           </MUILink>

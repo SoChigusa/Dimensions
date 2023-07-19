@@ -9,7 +9,7 @@ const DataTable = ({ title, data, input, latex, value }) => {
     <>
       <Typography variant='h5'>{title}</Typography>
       <TableContainer component={Paper}>
-        <Table sx={{ minWidth: 650 }} size="small" aria-label="prefixes">
+        <Table sx={{ minWidth: 400 }} size="small" aria-label="prefixes">
           <TableHead>
             <TableRow>
               <TableCell>{t.INPUT_VALUE}</TableCell>
